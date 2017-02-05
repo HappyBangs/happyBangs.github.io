@@ -1,5 +1,6 @@
 ---
 title: {{ title }}
 date: {{ date }}
-desc: Lorem ipsum dolor sit amet, consectetur.
+desc: desc
+tags: 
 ---

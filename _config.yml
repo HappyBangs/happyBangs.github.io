@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: HappyBangs Blog
+title: HappyBangs
 subtitle:
 description:
 author: xiqian
@@ -14,7 +14,7 @@ timezone:
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://happybangs.github.io/
 root: /
-permalink: :year/:month/:day/:title/
+permalink: :category/:title.html
 permalink_defaults:
 type: git
 
@@ -26,7 +26,7 @@ archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
-skip_render:
+skip_render: [README.md, 404.html]
 
 # Writingtheme
 new_post_name: :title.md # File name of new posts
@@ -47,6 +47,7 @@ highlight:
 # Category & Tag
 default_category: uncategorized
 category_map:
+  样式: css
 tag_map:
 
 # Date / Time format
@@ -76,3 +77,22 @@ deploy:
   type: git
   repo: https://github.com/HappyBangs/happyBangs.github.io
   branch: master
+
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  #type 表示类型, 是 atom 还是 rss2.
+  #path 表示 Feed 路径
+  #limit 最多多少篇最近文章
+
+# Search
+search: 
+  path: search.xml
+  field: post
+
+# SiteMap
+sitemap:
+    path: sitemap.xml
+baidusitemap:
+    path: baidusitemap.xml

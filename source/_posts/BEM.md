@@ -2,7 +2,8 @@
 title: BEM
 date: 2016-08-30 12:17:00
 categories: 样式
-tags: css规范
+tags: [css规范, css_basic]
+keywords: [css规范, css, BEM]
 ---
 众所周知，统一的命名规范可以显著的提高开发速度，然而现在大多数项目中的css的代码，都不会约定命名规范来开发，这导致随着时间的增长，css代码越来越不可维护。  
 

@@ -12,9 +12,9 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://happybangs.github.io/
+url: http://blog.xiqian.me/
 root: /
-permalink: :category/:title.html
+permalink: :category/:titleInUrl.html
 permalink_defaults:
 type: git
 
@@ -26,7 +26,7 @@ archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
-skip_render: [README.md, 404.html, baidu_verify_WOn1sDwJYq.html]
+skip_render: [README.md, 404.html, baidu_verify_WOn1sDwJYq.html, google69ec3c9e9e2c3683.html]
 
 # Writingtheme
 new_post_name: :title.md # File name of new posts
@@ -75,8 +75,11 @@ archive_generator:
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/HappyBangs/happyBangs.github.io
   branch: master
+  repo: 
+    github: git@github.com:HappyBangs/happyBangs.github.io.git
+    coding: git@git.coding.net:shichenxijian/shichenxijian.git
+
 
 feed:
   type: atom

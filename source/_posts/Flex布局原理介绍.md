@@ -1,5 +1,6 @@
 ---
 title: Flex布局原理介绍
+titleInUrl: Intro-of-flex-principle
 categories: 样式
 tags: [css_basic,flex]
 date: 2017-01-03 05:31:26

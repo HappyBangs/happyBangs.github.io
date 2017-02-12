@@ -1,5 +1,6 @@
 ---
 title: BEM
+titleInUrl: Intro-of-BEM
 date: 2016-08-30 12:17:00
 categories: 样式
 tags: [css规范, css_basic]

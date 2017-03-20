@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="happyBangs"><meta name="baidu-site-verification" content="WOn1sDwJYq"><title>JS创建对象的几种方式 | HappyBang's Blog</title><meta name="description" content="JS创建对象的几种方式"><meta name="keywords" content="CSS,HTML,js,javascript"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="toc-wrapper"><div class="toc-btn"></div><div class="toc-menu"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#对象创建方式"><span class="toc-text">对象创建方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工厂模式"><span class="toc-text">工厂模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造函数模式"><span class="toc-text">构造函数模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原型模式"><span class="toc-text">原型模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态原型模式"><span class="toc-text">动态原型模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#寄生构造函数模式"><span class="toc-text">寄生构造函数模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#稳妥构造函数模式"><span class="toc-text">稳妥构造函数模式</span></a></li></ol></div></div><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.jpg" class="sidebar-img"><h3 title=""><a href="/">HappyBangs</a></h3><div class="description"><p>更无畏，更有想法。</p></div></div></div><ul class="social-links"><li><a href="/atom.xml"><i class="fa fa-rss"></i></a></li></ul><div class="footer"><span>Theme Anatole </span><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Powered by Hexo</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">首页</a></li><li><a href="/about">关于</a></li><li><a href="/archives">归档</a></li><li><a href="/links">友链</a></li><li><a href="/tags">标签</a></li></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h1><a>JS创建对象的几种方式</a></h1></div><div class="post-content"><h3 id="对象创建方式"><a href="#对象创建方式" class="headerlink" title="对象创建方式"></a>对象创建方式</h3><p>前三种比较常用，后三种是某些特殊情况下的变体。</p>
+<table>
+<thead>
+<tr>
+<th>创建方式名称</th>
+<th>说明</th>
+<th>特点</th>
+<th>缺点</th>
+<th>优点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工厂模式</td>
+<td>简单地封装到一个函数里</td>
+<td>显式地创建了对象</td>
+<td><strong>对象和构造函数之间没有什么关系</strong>。因为构造函数是<code>Object</code>，instaceof和constructor都不能用</td>
+<td></td>
+</tr>
+<tr>
+<td>构造函数模式</td>
+<td><code>new Class()</code>、首字母大写</td>
+<td>没有显式地创建对象、不需要return语句 &amp; this赋值、调用必须使用new</td>
+<td><strong>浪费内存</strong>：每新建一个实例，所有属性（包括可共用的）都独立申请了内存，例如函数</td>
+<td>可以将对象标识为一种特定类型（自定义构造函数的类型。建议通过instance）</td>
+</tr>
+<tr>
+<td>原型模式（通常+构造）</td>
+<td><code>new Class() + prototype</code></td>
+<td>最常用！！</td>
+<td>构造函数和原型的声明位置是分开的</td>
+<td><strong>节省内存</strong>: 共享属性放在构造函数的原型上</td>
+</tr>
+<tr>
+<td>动态原型模式</td>
+<td>同上 + 在构造函数中初始化原型</td>
+<td>把所有信息都封装到构造函数中</td>
+<td>需要保证原型只绑定一次：因为每次创建实例，构造函数都会执行一遍。</td>
+<td>原型的定义也放在构造函数中了。</td>
+</tr>
+<tr>
+<td>寄生构造函数</td>
+<td>new  + 工厂模式</td>
+<td>和工厂模式相比，更规范一些</td>
+<td>同工厂模式</td>
+<td>二次加工很方便。模块化经常这么用，因为可以有闭包，也方便单元测试。</td>
+</tr>
+<tr>
+<td>稳妥构造函数模式</td>
+<td>工厂模式 +   函数中只定义函数</td>
+<td>保证实例化出来的对象是“稳妥对象“，变量值只能通过函数来获取</td>
+<td>同工厂模式</td>
+</tr>
+</tbody>
+</table>
+<h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 声明 &amp; 定义</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">  o.name = name;</div><div class="line">  o.age = age;</div><div class="line">  <span class="keyword">return</span> o;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 调用</span></div><div class="line"><span class="keyword">var</span> animal1 = Animal(<span class="string">'cc'</span>, <span class="number">24</span>);</div></pre></td></tr></table></figure>
+<h3 id="构造函数模式"><a href="#构造函数模式" class="headerlink" title="构造函数模式"></a>构造函数模式</h3><p>==只有通过new调用自定义构造函数所创建的实例，原型链上才不仅仅只有内置对象，__proto__和construct这种才有意义==</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 声明</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.name = name;</div><div class="line">  <span class="keyword">this</span>.age = age;</div><div class="line">  <span class="keyword">this</span>.isHappy = <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;; <span class="comment">// 每次实例创建，都需要为这个函数重新申请一次内存空间</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// 调用</span></div><div class="line"><span class="keyword">var</span> animal1 = <span class="keyword">new</span> Animal();</div></pre></td></tr></table></figure>
+<p> 这种方式调用构造函数经历的步骤：</p>
+<ol>
+<li><p>创建一个新对象</p>
+</li>
+<li><p>this指向了这个对象</p>
+</li>
+<li><p>执行构造函数中的代码，为对象添加新的属性</p>
+</li>
+<li><p>返回这个新对象</p>
+<p>​</p>
+</li>
+</ol>
+<p>优势： 可以判断对象的类型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 只有Animal.prototype中的constructor等于默认的constructor，才成立</span></div><div class="line">animal1.constructor === Animal; <span class="comment">// true</span></div><div class="line">animal1.constructor === <span class="built_in">Object</span>; <span class="comment">// false</span></div><div class="line"><span class="comment">// 或者这种，更准确</span></div><div class="line">animal1 <span class="keyword">instanceof</span> Animal; <span class="comment">// true; </span></div><div class="line">animal1 <span class="keyword">instanceof</span> <span class="built_in">Object</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h3 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h3><p>将“构造函数”模式的实例代码中，函数部分移到prototype中。</p>
+<p>这样既可以保证了不变的属性不浪费内存，又保证了可变的属性在不同实例中互不影响。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 声明</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.name = name;</div><div class="line">  <span class="keyword">this</span>.age = age;</div><div class="line">&#125;</div><div class="line">Animal.prototype.isHappy = <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;;<span class="comment">// 注意不要轻易给prototype重新赋值（ANimal.prototype = &#123;isHappy: ..&#125;）。因为会造成Animal.prototype.constructor丢失。</span></div><div class="line"><span class="keyword">var</span> animal1 = <span class="keyword">new</span> Animal();</div><div class="line">animal1.isHappy();</div></pre></td></tr></table></figure>
+<h3 id="动态原型模式"><a href="#动态原型模式" class="headerlink" title="动态原型模式"></a>动态原型模式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 声明</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.name = name;</div><div class="line">  <span class="keyword">this</span>.age = age;</div><div class="line">  <span class="keyword">if</span>(!<span class="keyword">this</span>.isHappy) &#123; <span class="comment">// 防止定义原型属性</span></div><div class="line">    Animal.prototype.isHappy = <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;; <span class="comment">// 注意不能用对象字面量形式创建新原型，因为会切断已创建的实例与新原型之间的联系。</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="寄生构造函数模式"><a href="#寄生构造函数模式" class="headerlink" title="寄生构造函数模式"></a>寄生构造函数模式</h3><p>寄生 - parasitic [pærə’sɪtɪk]</p>
+<p>和工厂模式比，只是多了个new而已，而这个new加不加对使用没有任何影响。</p>
+<p>但是书中的例子，使用<strong>这种模式对内置对象进行自定义封装</strong>的做法是很值得借鉴的。看起来比工厂模式更专业。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyArray</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>);</div><div class="line">  <span class="keyword">var</span> values = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">  values.push.apply(values, <span class="built_in">arguments</span>);<span class="comment">// arguments为数组类型，不能直接当做push的参数，否则会变成values = [[1，2，3，4，5]];巧妙的使用了apply第二个参数是数组的特点。相当于values.push(1,2,3,4,5);</span></div><div class="line">  values.toString = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.join(<span class="string">'|'</span>);</div><div class="line">  &#125;; <span class="comment">// **二次加工**</span></div><div class="line">  <span class="keyword">return</span> values;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> ma1 = <span class="keyword">new</span> MyArray(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">9</span>);</div><div class="line">ma1.constructor !== MyArray; <span class="comment">// true, 无法依赖constructor和instanceof操作符来确定对象类型</span></div><div class="line">ma1.constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h3 id="稳妥构造函数模式"><a href="#稳妥构造函数模式" class="headerlink" title="稳妥构造函数模式"></a>稳妥构造函数模式</h3><p>durable objects 稳妥对象，没有公共属性，this为空的对象。对象的变量只能通过其函数获取。</p>
+<p>通常在一些要求安全的环境中（禁止使用this和new）等中使用。</p>
+<p>基本和工厂模式形式一样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 声明 &amp; 定义</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">  o.getName = <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">return</span> name;</div><div class="line">  o.getAge = <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">return</span> age;</div><div class="line">  <span class="keyword">return</span> o;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 调用</span></div><div class="line"><span class="keyword">var</span> animal1 = Animal(<span class="string">'cc'</span>, <span class="number">24</span>);</div></pre></td></tr></table></figure></div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-moon-o"></i><span class="date">2017-03-20 19:03</span><i class="fa fa-comment-o"></i><a href="/jsBasic/How_To_Create_Object_In_JavaScript.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/jsBasic/" title="jsBasic" class="tag">jsBasic </a><a href="/tags/constructor，prototype/" title="constructor，prototype" class="tag">constructor，prototype </a><a href="/tags/原型/" title="原型" class="tag">原型 </a></div></div></div></div><div class="share"><div class="evernote"> <a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></div><div class="weibo"> <a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></div><div class="twitter"> <a href="http://twitter.com/home?status=,http://blog.xiqian.me/jsBasic/How_To_Create_Object_In_JavaScript.html,HappyBang's Blog,JS创建对象的几种方式,;" class="fa fa-twitter"></a></div></div><div class="pagination"><ul class="clearfix"><li class="pre pagbuttons"><a role="navigation" href="/jsBasic/How_To_Inherit_In_JavaScript.html" title="再看JS中的继承" class="btn">上一篇</a></li><li class="next pagbuttons"><a role="navigation" href="/jsBasic/Javascript_Object_Attributes_Of_JavaScript.html" title="JS对象属性的特征" class="btn">下一篇</a></li></ul></div><a id="comments"></a><div id="disqus_thread"></div><script>var disqus_shortname = 'happybangs';
+var disqus_identifier = 'jsBasic/How_To_Create_Object_In_JavaScript.html';
+var disqus_title = 'JS创建对象的几种方式';
+var disqus_url = 'http://blog.xiqian.me/jsBasic/How_To_Create_Object_In_JavaScript.html';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//happybangs.disqus.com/count.js" async></script></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script></body></html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="happyBangs"><meta name="baidu-site-verification" content="WOn1sDwJYq"><title>js中的几种遍历方式 | HappyBang's Blog</title><meta name="description" content="几种循环方式对比
+
+
+名称
+简介
+入参
+原生
+适用对象
+this
+跳出循环块
+直接进入下一次循环
+特点
+
+
+
+
+for(var i=0;i&amp;lt;v.length;i++) {}
+basic
+
+yes
+array，伪数组(domList)
+window
+break
+continue
+
+
+
+for(k"><meta name="keywords" content="CSS,HTML,js,javascript"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="toc-wrapper"><div class="toc-btn"></div><div class="toc-menu"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#几种循环方式对比"><span class="toc-text">几种循环方式对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></div></div><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.jpg" class="sidebar-img"><h3 title=""><a href="/">HappyBangs</a></h3><div class="description"><p>更无畏，更有想法。</p></div></div></div><ul class="social-links"><li><a href="/atom.xml"><i class="fa fa-rss"></i></a></li></ul><div class="footer"><span>Theme Anatole </span><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Powered by Hexo</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">首页</a></li><li><a href="/about">关于</a></li><li><a href="/archives">归档</a></li><li><a href="/links">友链</a></li><li><a href="/tags">标签</a></li></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h1><a>js中的几种遍历方式</a></h1></div><div class="post-content"><h4 id="几种循环方式对比"><a href="#几种循环方式对比" class="headerlink" title="几种循环方式对比"></a>几种循环方式对比</h4><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>简介</th>
+<th>入参</th>
+<th>原生</th>
+<th>适用对象</th>
+<th>this</th>
+<th>跳出循环块</th>
+<th>直接进入下一次循环</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>for(var i=0;i&lt;v.length;i++) {}</td>
+<td>basic</td>
+<td></td>
+<td>yes</td>
+<td>array，伪数组(domList)</td>
+<td>window</td>
+<td>break</td>
+<td>continue</td>
+<td></td>
+</tr>
+<tr>
+<td>for(key in list) {}</td>
+<td>枚举对象的所有可枚举的属性，包括原型</td>
+<td>若list为数组，则key为当前索引；若list为对象，key为当前的属性值，value通过list[one]获得</td>
+<td>yes</td>
+<td>array[key会转化且无序，不适合], domList, objWithProto</td>
+<td>window</td>
+<td>break</td>
+<td>continue</td>
+<td><strong>会遍历出原型的值</strong>。他是无序的。key会转换为字符串。</td>
+</tr>
+<tr>
+<td>array.forEach(one) {}</td>
+<td>Array.prototype.forEach</td>
+<td>one是array中的当前位置的元素</td>
+<td>yes</td>
+<td>array</td>
+<td>window</td>
+<td>无</td>
+<td>无</td>
+<td><strong>不能自定义退出循环</strong></td>
+</tr>
+<tr>
+<td>array.map(function(currentValue, index, array) {},newThis);</td>
+<td>Array.prototype.Map</td>
+<td></td>
+<td>yes</td>
+<td>array</td>
+<td>可以通过第三个参数所在作用域（this的值）</td>
+<td></td>
+<td></td>
+<td>会将返回值拼成数组</td>
+</tr>
+<tr>
+<td>$.map（array,  function(value,key) {}）</td>
+<td>原理和$.each是一样的，除了将callback的返回值装入了一个数组，并且返回、this指向window之外。</td>
+<td></td>
+<td>Jquery</td>
+<td>array,domList，obj(会有原型)</td>
+<td>window</td>
+<td>无</td>
+<td>无</td>
+<td>同each, 特定条件下会返回原型；并且是无序的；more:他的value和key位置是返的</td>
+</tr>
+<tr>
+<td>$.each(aray, function(key,value))</td>
+<td>源码中，如果满足条件的对象，相当于 for in；否则是普通for</td>
+<td>若list为数组，则key为当前索引；若list为对象，key为当前的属性值，value通过list[one]获得</td>
+<td>Jquery</td>
+<td>array,dom,obj(会有原型)</td>
+<td>当前属性的值。如果不是对象类型，则value转换成对象形式，如<code>Boolean {[[PrimitiveValue]]: true}</code></td>
+<td>return false;</td>
+<td>return true;</td>
+<td><strong>若<code>length === undefined</code>或者<code>jQuery.isFunction( object );</code>, 会遍历出原型；他是无序的。</strong></td>
+</tr>
+<tr>
+<td>$(selector).each(function(index,element, otherPramter))</td>
+<td>同上</td>
+<td></td>
+<td>Jquery</td>
+<td>dom</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>for(let value of array)</td>
+<td>弥补forEach的缺点，可以遍历dom，且能退出；弥补for in的缺点，还可以遍历dom(无原型)</td>
+<td></td>
+<td>ES6</td>
+<td>array,dom</td>
+<td>window</td>
+<td>break</td>
+<td>continue</td>
+<td>遍历对象需要额外处理；但他是有序的。</td>
+</tr>
+</tbody>
+</table>
+<p>这里我们要测试三种常用的数据种类：</p>
+<ol>
+<li><p>array</p>
+<p><code>var array = [1,2,3];</code></p>
+<p>这是标准的数组，拥有Array.prototype的属性。</p>
+<p><code>array instanceof Array</code>为true</p>
+</li>
+<li><p>domList</p>
+<p><code>var dom = $(&#39;li&#39;)</code> 或者 <code>var dom = document.getElementsByTagName(&#39;li&#39;);</code></p>
+<p>这不是标准的数组，<strong>不</strong>拥有Array.prototype的属性。不能使用<code>forEach</code>和原生的<code>map</code>。</p>
+<p>其实它有个名字叫<strong>伪数组</strong>（像数组一样有 <code>length</code> 属性，且使用0，1，2这种索引可以获取对象），常见的参数的参数 arguments，DOM 对象列表</p>
+<p>权威指南上判断是维数组的代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">isArrayLike</span>(<span class="params">o</span>) </span>&#123;   </div><div class="line">    <span class="keyword">if</span> (o &amp;&amp;                                <span class="comment">// o is not null, undefined, etc.</span></div><div class="line">            <span class="keyword">typeof</span> o === <span class="string">'object'</span> &amp;&amp;            <span class="comment">// o is an object</span></div><div class="line">            <span class="built_in">isFinite</span>(o.length) &amp;&amp;               <span class="comment">// o.length is a finite number</span></div><div class="line">            o.length &gt;= <span class="number">0</span> &amp;&amp;                    <span class="comment">// o.length is non-negative</span></div><div class="line">            o.length===<span class="built_in">Math</span>.floor(o.length) &amp;&amp;  <span class="comment">// o.length is an integer</span></div><div class="line">            o.length &lt; <span class="number">4294967296</span>)              <span class="comment">// o.length &lt; 2^32</span></div><div class="line">            <span class="keyword">return</span> <span class="literal">true</span>;                        <span class="comment">// Then o is array-like</span></div><div class="line">    <span class="keyword">else</span></div><div class="line">            <span class="keyword">return</span> <span class="literal">false</span>;                       <span class="comment">// Otherwise it is not</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>objWithProto</p>
+<p>带有原型的。 没有length属性，不能使用<code>for(i){}</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> objWithProto =  &#123;</div><div class="line">        <span class="attr">name</span>: <span class="string">'cc'</span>,</div><div class="line">        <span class="attr">age</span>: <span class="number">24</span>,</div><div class="line">        <span class="attr">info</span>: &#123;</div><div class="line">            <span class="attr">title</span>: <span class="string">'happybangs'</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">objWithProto.__Proto__.protoName = <span class="string">'protoValue'</span>;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li><p>对于使用jquery的情况</p>
+<p>array和dom遍历用<code>each</code>。object可以使用<code>each</code>，但是要注意排除原型。三者需要拼凑返回值时用<code>map</code>.</p>
+<p> <code>if (array.hasOwnProperty(key)) {// 处理代码 }</code></p>
+</li>
+<li><p>对于原生ES5的情况</p>
+<ul>
+<li>array使用<code>forEach</code>(不能跳出循环)</li>
+<li><p>dom遍历使用<code>for(i)</code>, 或者</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[].forEach.call(divs, <span class="function"><span class="keyword">function</span>(<span class="params">div</span>) </span>&#123;</div><div class="line"> div.style.color = <span class="string">"red"</span>;</div><div class="line"> &#125;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>对象使用<code>for..in</code>（记得排除原型）   </p>
+</li>
+</ul>
+</li>
+<li><p>对于可以原生ES6的情况<br>array和dom使用 <code>for(const obj of array) {}</code>,</p>
+<p>遍历对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Object.keys(obj)返回["name", "age", "info"]</span></div><div class="line"><span class="keyword">for</span>(<span class="keyword">const</span> key <span class="keyword">of</span> <span class="built_in">Object</span>.keys(objWithProto)) &#123;</div><div class="line">    <span class="built_in">console</span>.log(objWithProto[key]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2017-02-12 16:02</span><i class="fa fa-comment-o"></i><a href="/jsBasic/Ways-of-loop-in-javascript.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/jsBasic/" title="jsBasic" class="tag">jsBasic </a><a href="/tags/js/" title="js" class="tag">js </a><a href="/tags/for/" title="for" class="tag">for </a><a href="/tags/for-in/" title="for in" class="tag">for in </a><a href="/tags/for-of/" title="for of" class="tag">for of </a><a href="/tags/foreach/" title="foreach" class="tag">foreach </a><a href="/tags/map/" title="map" class="tag">map </a></div></div></div></div><div class="share"><div class="evernote"> <a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></div><div class="weibo"> <a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></div><div class="twitter"> <a href="http://twitter.com/home?status=,http://blog.xiqian.me/jsBasic/Ways-of-loop-in-javascript.html,HappyBang's Blog,js中的几种遍历方式,;" class="fa fa-twitter"></a></div></div><div class="pagination"><ul class="clearfix"><li class="pre pagbuttons"><a role="navigation" href="/readingNotes/book-of-you-dont-know-js-1.html" title="读书笔记：你不知道的js - 第一章,第二章" class="btn">上一篇</a></li><li class="next pagbuttons"><a role="navigation" href="/css/Intro-of-flex-principle.html" title="Flex布局原理介绍" class="btn">下一篇</a></li></ul></div><a id="comments"></a><div id="disqus_thread"></div><script>var disqus_shortname = 'happybangs';
+var disqus_identifier = 'jsBasic/Ways-of-loop-in-javascript.html';
+var disqus_title = 'js中的几种遍历方式';
+var disqus_url = 'http://blog.xiqian.me/jsBasic/Ways-of-loop-in-javascript.html';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//happybangs.disqus.com/count.js" async></script></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script></body></html>

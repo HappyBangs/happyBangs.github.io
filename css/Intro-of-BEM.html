@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="happyBangs"><meta name="baidu-site-verification" content="WOn1sDwJYq"><title>BEM | HappyBang's Blog</title><meta name="description" content="众所周知，统一的命名规范可以显著的提高开发速度，然而现在大多数项目中的css的代码，都不会约定命名规范来开发，这导致随着时间的增长，css代码越来越不可维护。  
+BEM是Yandex团队提出的，通过一种严格方式来将 CSS Class划分成独立构成要素的一种命名方法。
+
+BEM is a high"><meta name="keywords" content="css规范,css,BEM"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="toc-wrapper"><div class="toc-btn"></div><div class="toc-menu"></div></div><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.jpg" class="sidebar-img"><h3 title=""><a href="/">HappyBangs</a></h3><div class="description"><p>更无畏，更有想法。</p></div></div></div><ul class="social-links"><li><a href="/atom.xml"><i class="fa fa-rss"></i></a></li></ul><div class="footer"><span>Theme Anatole </span><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Powered by Hexo</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">首页</a></li><li><a href="/about">关于</a></li><li><a href="/archives">归档</a></li><li><a href="/links">友链</a></li><li><a href="/tags">标签</a></li></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h1><a>BEM</a></h1></div><div class="post-content"><p>众所周知，统一的命名规范可以显著的提高开发速度，然而现在大多数项目中的css的代码，都不会约定命名规范来开发，这导致随着时间的增长，css代码越来越不可维护。  </p>
+<p>BEM是Yandex团队提出的，通过一种严格方式来将 CSS Class划分成独立构成要素的一种命名方法。</p>
+<blockquote>
+<p>BEM is a highly useful, powerful and simple naming convention to make your front-end code easier to read and understand, easier to work with, easier to scale, more robust and explicit and a lot more strict.</p>
+</blockquote>
+<p>BEM是Block，Element，Modifier的缩写。它的命名规则就是由这三部分组成。</p>
+<ul>
+<li>Block：块，独立的模块。如header，container，menu，checkbox，input。block可以相互嵌套，一个header是block,header里嵌套的搜索框是block,甚至一个icon一个logo也是block。</li>
+<li>Element：元素，block的一部分，不独立，是依赖于block的。  如 menu item,list item,header title。</li>
+<li>Modifier: 修饰符，表示block或者element的状态，使用它来改变元素或者块的外观或者行为。例如 disabled,checked,active等。  </li>
+</ul>
+<p>官方示例中，块和元素之间使用 <strong> 分隔，元素/块和装饰符之间使用 – 分隔，比较长的名称使用-分隔。例如：simple-form</strong>submit–disabled(简单表单中禁用状态的提交按钮)。 但实际使用中可以自行定义间隔符类型。</p>
+<p>一个前端页面，利用今天介绍的思想，可以转换为一个块和元素相互嵌套的对象模型，这种结构叫做 <strong>BEM树</strong>。  </p>
+<p>例如，一个网站的菜单项，用BEM的方法分析网站的结构得到(json)：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  block: 'menu',</div><div class="line">  content: [</div><div class="line">    &#123; </div><div class="line">        elem: 'item', </div><div class="line">        content: 'Index' </div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      elem: 'item',</div><div class="line">      mods: &#123; 'state' : 'current' &#125;,</div><div class="line">      content: 'Products'</div><div class="line">    &#125;,</div><div class="line">    &#123; </div><div class="line">        elem: 'item', </div><div class="line">        content: 'Contact' </div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>转换为html代码：</p>
+<pre><code class="html"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"menu"</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu__item"</span>&gt;</span>Index<span class="tag">&lt;/<span class="name">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu__item menu__item_state_current"</span>&gt;</span>Products<span class="tag">&lt;/<span class="name">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu__item"</span>&gt;</span>Contact<span class="tag">&lt;/<span class="name">li</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">ul</span>&gt;</span>
+</code></pre>
+<p>优点：  </p>
+<ul>
+<li>模块化。block(块)不会依赖页面中任何其他元素。</li>
+<li>复用性强。名字很长，冲突都难。</li>
+<li>结构清晰，易读。因为命名有一定的规则，所以会很容易的找到块所在的位置，元素的含义以及修饰符如何使用。</li>
+<li>其他：基本不需要嵌套,层级少了，css性能提升了。</li>
+</ul>
+<p>缺点：命名复杂，长度长。但可以使用Mixins自动生成名字（然而编写的时候还是很麻烦，很多人也是因为这个望而却步）。</p>
+<p>虽然不会将BEM使用到项目中，但是BEM的设计思想还是很值得学习的。</p>
+<p>使用BEM的网站：<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/7fcc9e9747b03d1d74fa8069ca2453a1" alt="screenshot"></p>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2016-08-30 12:08</span><i class="fa fa-comment-o"></i><a href="/css/Intro-of-BEM.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/css/" title="样式" class="tag">样式 </a><a href="/tags/css规范/" title="css规范" class="tag">css规范 </a><a href="/tags/css-basic/" title="css_basic" class="tag">css_basic </a></div></div></div></div><div class="share"><div class="evernote"> <a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></div><div class="weibo"> <a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></div><div class="twitter"> <a href="http://twitter.com/home?status=,http://blog.xiqian.me/css/Intro-of-BEM.html,HappyBang's Blog,BEM,;" class="fa fa-twitter"></a></div></div><div class="pagination"><ul class="clearfix"><li class="pre pagbuttons"><a role="navigation" href="/css/Intro-of-flex-principle.html" title="Flex布局原理介绍" class="btn">上一篇</a></li></ul></div><a id="comments"></a><div id="disqus_thread"></div><script>var disqus_shortname = 'happybangs';
+var disqus_identifier = 'css/Intro-of-BEM.html';
+var disqus_title = 'BEM';
+var disqus_url = 'http://blog.xiqian.me/css/Intro-of-BEM.html';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//happybangs.disqus.com/count.js" async></script></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script></body></html>

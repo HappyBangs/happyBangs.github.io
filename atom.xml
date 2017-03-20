@@ -1,0 +1,1177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>HappyBang&#39;s Blog</title>
+  <subtitle>HappyBangs</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://blog.xiqian.me/"/>
+  <updated>2017-03-20T11:41:07.000Z</updated>
+  <id>http://blog.xiqian.me/</id>
+  
+  <author>
+    <name>xiqian</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>再看JS中的继承</title>
+    <link href="http://blog.xiqian.me/jsBasic/How_To_Inherit_In_JavaScript.html"/>
+    <id>http://blog.xiqian.me/jsBasic/How_To_Inherit_In_JavaScript.html</id>
+    <published>2017-03-20T11:18:54.000Z</published>
+    <updated>2017-03-20T11:41:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="ES5的继承"><a href="#ES5的继承" class="headerlink" title="ES5的继承"></a>ES5的继承</h2><p>使用原型链的基本模式实现继承的例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 父类</span></div><div class="line"><span class="keyword">var</span> superClass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.supName = <span class="string">'supName'</span>;</div><div class="line">&#125;;</div><div class="line">superClass.prototype.supPName = <span class="string">'supPName'</span>;</div><div class="line"><span class="comment">// 子类</span></div><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.subName = <span class="string">'subName'</span>;</div><div class="line">&#125;;</div><div class="line">subClass.prototype = <span class="keyword">new</span> superClass();<span class="comment">// constructor被覆盖，删除了</span></div><div class="line">subClass.prototype.subPName = <span class="string">'subPName'</span>;</div><div class="line"><span class="comment">// 实例</span></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> subClass();</div></pre></td></tr></table></figure>
+<p>画出原型图：</p>
+<p>虚线表示原型链(__proto__)，实线表示原型对象(prototype)。</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/f5210afc927f897fdcf55b2b2813959b.png" alt="原型大图.png"></p>
+<p>例图解释：</p>
+<p>由橙色的虚线知道：<strong>所有构造函数都包含指向Function.prototype的指针，因为构造函数都是函数（= new Function();）</strong>。</p>
+<p>由红色的虚线知道：<strong>所有原型对象(prototype)的都包含指向Object.prototype的指针，因为所有函数的默认原型（prototype）都是Object（= new Object();）的实例。</strong></p>
+<ul>
+<li><p>关于继承中的原型：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">instance.__proto__ === subClass.prototype;</div><div class="line">subClass.prototype.__proto__ === superClass.prototype;</div><div class="line">superClass.prototype.__proto__ === <span class="built_in">Object</span>.prototype;</div><div class="line"><span class="built_in">Object</span>.prototype.__proto__ === <span class="literal">null</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>关于构造函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">instance.constructor  === superClass; <span class="comment">// true</span></div><div class="line">instance.constructor  === subClass; <span class="comment">// false</span></div><div class="line">instance <span class="keyword">instanceof</span> subClass; <span class="comment">// true;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li>关于属性<br>除了原型链上的，<strong>还有父类的构造函数的</strong>。<br>父类的构造函数会向前提一级，变成其实例的直接属性。</li>
+<li>Function, Array，Number和Object的关系 ？</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.prototype.isPrototypeOf(<span class="built_in">Function</span>.prototype); <span class="comment">// true</span></div><div class="line"><span class="built_in">Function</span>.prototype.isPrototypeOf(<span class="built_in">Function</span>); <span class="comment">// true</span></div><div class="line"><span class="built_in">Object</span>.prototype.isPrototypeOf(<span class="built_in">Function</span>); <span class="comment">// true</span></div><div class="line"><span class="built_in">Object</span>.getPrototypeOf(<span class="built_in">Function</span>.prototype) === <span class="built_in">Object</span>.prototype; <span class="comment">// true</span></div><div class="line"><span class="built_in">Function</span>.prototype.isPrototypeOf(<span class="built_in">Array</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h3 id="原型原型链的概念"><a href="#原型原型链的概念" class="headerlink" title="原型原型链的概念"></a>原型原型链的概念</h3><blockquote>
+<p>原型 - prototype：（参考《Javascript高级程序设计》）</p>
+<p>定义 - 每个<strong>函数</strong>都有一个prototype（原型）属性，这个属性是一个指针，指向一个对象。这个对象<strong>默认</strong>包含一个constructor属性（也可能被覆盖掉），这个属性包含一个指向prototype属性所在函数的指针。</p>
+<p>好处 - 这个函数所创建的所有的<strong>实例(New)</strong>都共享这个对象所包含的属性和方法，不占用多份内存。</p>
+<p>原型链 - __proto__：（参考《Javascript高级程序设计》）</p>
+<p>如果让A的原型对象等于另一个类型B的实例，此时A的原型对象将包含指向B的原型对象的指针(__proto__)。相应的，B.prototype也包含着指向B构造函数的指针。将入B的原型对象又是C类型的的实例，上述关系依然成立。如此层层递进，就构成了实例与原型的链条。</p>
+</blockquote>
+<p>Q: 如何理解prototype指向的是一块内存地址? 即，原型对象的“重写”问题</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">Animal.prototype.name = <span class="string">'animal'</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Plants</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">Plants.prototype = &#123;<span class="comment">// 内存地址1</span></div><div class="line">  name: <span class="string">'plants'</span></div><div class="line">&#125;;</div><div class="line"><span class="keyword">var</span> a1 =  <span class="keyword">new</span> Animal(); <span class="comment">// a1.__proto__===Animal.prototype; a1.constructor===Animal</span></div><div class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Plants(); <span class="comment">// p1.__proto__===Plants.prototype;p1.constructor===Object</span></div><div class="line">Plants.prototype = &#123; <span class="comment">// 内存地址2。在这个位置修改Plants的原型，相当于指向了一块新的地址。看看会发生生么</span></div><div class="line">  name: <span class="string">'plants new'</span></div><div class="line">&#125;;</div><div class="line"><span class="built_in">console</span>.log(p1); <span class="comment">// attention!!: p1.__proto__!==Plants.prototype;p1.constructor===Object；</span></div><div class="line"><span class="comment">// 这是因为p1.__proto__仍然指向的定义时的内存地址1; 同理constructor也是跟随定义时的内存地址中的constructor。</span></div><div class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> Plants();<span class="comment">// p2.__proto__===Plants.prototype;p2.constructor===Object</span></div></pre></td></tr></table></figure>
+<p>由此可以得出要注意的一点：</p>
+<p>在有实例创建之后，就不要修改prototype指向的地址了。因为实例的仍然存储的是“快照”，和你重新定义的无法联系起来。</p>
+<h3 id="prototype、constructor、-proto-的关系"><a href="#prototype、constructor、-proto-的关系" class="headerlink" title="prototype、constructor、__proto__的关系"></a>prototype、constructor、__proto__的关系</h3><ul>
+<li><p>函数默认有prototype属性，它是一块指针，指向一个内存地址。默认指向的内存地址，包含一个constructor的属性。所以constructor是prototype的一个属性。constructor指向这个函数。</p>
+</li>
+<li><p>当这个函数作为构造函数，创建了实例。这个实例就拥有一个指向函数的原型对象(prototype)的内部指针(__proto__)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Function</span>.__proto__ === <span class="built_in">Function</span>.prototype; <span class="comment">// Function = new Function();</span></div><div class="line"><span class="built_in">Function</span>.prototype === <span class="built_in">Function</span>.__proto__;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="instanceof和constructor的区别和联系"><a href="#instanceof和constructor的区别和联系" class="headerlink" title="instanceof和constructor的区别和联系"></a>instanceof和constructor的区别和联系</h3><p>问题引入：为什么有的时候constructor不能用的时候，instanceof还能用？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">Animal.prototype = &#123;&#125;;</div><div class="line"><span class="keyword">var</span> a1 = <span class="keyword">new</span> Animal();</div><div class="line">a1.constructor === Animal; <span class="comment">// false; 因为Animal.prototype.constructor未定义</span></div><div class="line">a1 <span class="keyword">instanceof</span> Animal; <span class="comment">// true</span></div><div class="line">a1 <span class="keyword">instanceof</span> <span class="built_in">Object</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<ul>
+<li><p>实现原理不同</p>
+<ul>
+<li><p>instance.constructor</p>
+<p>取Animal.prototype.constructor的值。默认Animal.prototype.constructor === Animal。</p>
+<p>但是，当你修改Animal.prototype指向的地址(例子中是这种情况)，或者直接修改construcor的值时，它就会失效。</p>
+</li>
+<li><p>instance instanceof Animal</p>
+<p>根据a1.__proto__是否等于 Animal.prototype。</p>
+</li>
+</ul>
+</li>
+<li><p>作用不同</p>
+<ul>
+<li>constructor只能得出直接的类型（一层）</li>
+<li>instanceof能检测原型链上<strong>所有</strong>的类型，如Object（多层）</li>
+</ul>
+</li>
+<li><p>可靠性不同</p>
+<ul>
+<li>constructor只有默认的prototype才会自动创建，而用户很有可能为了实现继承而覆盖prototype所包含的地址。所以constructor很可能没定义。</li>
+<li>instanceof不会被覆盖，更可靠</li>
+</ul>
+</li>
+</ul>
+<p><code>instanceof</code>的作用等同于<code>Object.prototype.isPrototypeOf()</code>，都是查找的原型链，只是两者的调用方式不同。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Animal.prototype.isPrototypeOf(a1);  <span class="comment">// true;</span></div><div class="line"><span class="built_in">Object</span>.prototype.isPrototypeOf(a1);  <span class="comment">// true;</span></div></pre></td></tr></table></figure>
+<h3 id="原型只共享引用类型吗？"><a href="#原型只共享引用类型吗？" class="headerlink" title="原型只共享引用类型吗？"></a>原型只共享引用类型吗？</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> supClass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">supClass.prototype.name = <span class="string">'spName'</span>;</div><div class="line">supClass.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.name;&#125;;</div><div class="line"><span class="keyword">var</span> instance1 = <span class="keyword">new</span> supClass();</div><div class="line"><span class="keyword">var</span> instance2 = <span class="keyword">new</span> supClass();</div><div class="line">instance1.name === instance2.name; <span class="comment">// true</span></div><div class="line">instance1.name = <span class="string">'instanceName'</span>;</div><div class="line">instance2.name === <span class="string">'instanceName'</span>; <span class="comment">// false why?原型的属性不是共享的吗</span></div></pre></td></tr></table></figure>
+<p>由上面这个例子并不能得出他只共享引用类型，因为 对<code>instance1.name</code>重新赋值，代表了instance1的属性上新增了name属性。</p>
+<p><strong>原型的共享只体现在读取属性上。</strong></p>
+<h3 id="实现对象继承的几种方式"><a href="#实现对象继承的几种方式" class="headerlink" title="实现对象继承的几种方式"></a>实现对象继承的几种方式</h3><blockquote>
+<p>许多面向对象(OO)语言都支持两种继承方式：接口继承和实现继承</p>
+<p>其中接口继承只继承方法签名，而实现继承则继承实际的方法。</p>
+<p>由于JS中函数没有签名，因此在ECMAScript中无法实现接口继承，只支持实现继承。</p>
+<p>—— 《JavaScript高级程序设计》</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>继承方式名称</th>
+<th>说明</th>
+<th>缺点</th>
+<th>优点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原型链继承</td>
+<td>很少单独使用</td>
+<td>1. 不该共享的属性也共享了;  2. 无法在不影响所有对象实例的情况下，向超类型的构造函数传递参数；（subClass.prototype = new superClass(); 根本不在subClass构造函数中，所以拿不到参数）</td>
+<td>1. 有共享的概念；2. 能使用instanceof和isPrototypeOf（constructor只能找到“最终的”父类）</td>
+</tr>
+<tr>
+<td>借用构造函数继承</td>
+<td>在子类构造函数中调用父类的构造函数(apply or call)。</td>
+<td>1. 方法都在构造函数中定义，没有共享的概念；2. 没有原型继承，不知道父类是什么。</td>
+<td>1. 可以向超类型传递参数；</td>
+</tr>
+<tr>
+<td>组合继承/伪经典继承</td>
+<td>借用构造函数 + 原型链 —— 把属性分为原型属性(共享)和实例属性（不共享）。</td>
+<td>超类型的构造函数会执行两次，一次是创建子类原型时，一次在子类构造函数内部。因此，其中this上的属性也会同时挂载在实例属性和原型属性上。（只不过因为优先级，只识别实例属性上的）</td>
+<td>1. 有原型；2. 该共享共享，不改共享的不共享</td>
+</tr>
+<tr>
+<td>原型式继承</td>
+<td>不需要创建构造函数、不需要显式调用new来创建实例，只有原型属性的继承。<code>Object.create()</code></td>
+<td>始终共享相同的值</td>
+<td>另辟蹊径，步骤简单</td>
+</tr>
+<tr>
+<td>寄生式继承</td>
+<td>原型式继承 + 二次增强，类似寄生构造函数（工厂模式 + 二次增强）</td>
+<td>不认同书上说的“不能做到函数复用”的缺点，因为我用寄生式继承不一定是为它增加一个引用类型的可共享属性，还有可能是不可共享的。</td>
+<td>可以对原型式继承进行二次增强。</td>
+</tr>
+<tr>
+<td>寄生组合式继承</td>
+<td>引用类型最理想的继承范式。去掉<code>subClass.prototype = new supClass()</code>，改为 <code>subClass.prototype = commonObject;</code>,commonObject.__proto__ = supClass.prototype。</td>
+<td>保持了组合继承的所有优点</td>
+<td>高效：之调用了一次supClass改造函数，避免了组合继承的缺点。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="原型链继承"><a href="#原型链继承" class="headerlink" title="原型链继承"></a>原型链继承</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 父类</span></div><div class="line"><span class="keyword">var</span> superClass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.supName = <span class="string">'supName'</span>;</div><div class="line">&#125;;</div><div class="line">superClass.prototype.supPName = <span class="string">'supPName'</span>;</div><div class="line"><span class="comment">// 子类</span></div><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.subName = <span class="string">'subName'</span>;</div><div class="line">&#125;;</div><div class="line">subClass.prototype = <span class="keyword">new</span> superClass();<span class="comment">// constructor被覆盖，删除了</span></div><div class="line">subClass.prototype.subPName = <span class="string">'subPName'</span>;</div><div class="line"><span class="comment">// 实例</span></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> subClass();</div></pre></td></tr></table></figure>
+<p>缺点：</p>
+<ul>
+<li><p>包含引用类型值的原型不应该被所有实例共享。</p>
+<p><code>superClass中的supName</code>就会被所有实例共享，因为它存在于<code>instance</code>的原型属性中。</p>
+</li>
+<li><p>无法向超类型的构造函数传值。</p>
+<p>传值只能传到subClass的构造函数中，而subClass函数和superClass没有直接关系，无法传参。</p>
+<p>​</p>
+</li>
+</ul>
+<h4 id="借用构造函数继承"><a href="#借用构造函数继承" class="headerlink" title="借用构造函数继承"></a>借用构造函数继承</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 父类</span></div><div class="line"><span class="keyword">var</span> superClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.supName = name;</div><div class="line">&#125;;</div><div class="line"><span class="comment">// 子类</span></div><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  superClass.call(<span class="keyword">this</span>, name);</div><div class="line">  <span class="keyword">this</span>.subName = <span class="string">'sub'</span> + name;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 实例</span></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> subClass(<span class="string">'Instance'</span>); <span class="comment">// &#123;supName: "Instance", subName: "subInstance"&#125;</span></div></pre></td></tr></table></figure>
+<p>缺点很明显，没有使用到原型：属性无法共享、实例找不到父类是谁。</p>
+<h4 id="组合继承"><a href="#组合继承" class="headerlink" title="组合继承"></a>组合继承</h4><p>使用原型链实现对原型属性的继承，通过借用构造函数来实现对实例属性的继承</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 父类</span></div><div class="line"><span class="keyword">var</span> superClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.supName = name; </div><div class="line">&#125;;</div><div class="line">superClass.prototype.supPName = <span class="string">'supPName'</span>;</div><div class="line"><span class="comment">// 子类</span></div><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  superClass.call(<span class="keyword">this</span>, name); <span class="comment">// superClass()执行第一遍</span></div><div class="line">  <span class="keyword">this</span>.subName = <span class="string">'sub'</span> + name;</div><div class="line">&#125;</div><div class="line">subClass.prototype = <span class="keyword">new</span> superClass();<span class="comment">// superClass()执行第二遍</span></div><div class="line">subClass.prototype.subPName = <span class="string">'subPName'</span>;</div><div class="line"><span class="comment">// 实例</span></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> subClass(<span class="string">'Instance'</span>);</div></pre></td></tr></table></figure>
+<p>控制台的打印结果：</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/eb0833995a9f9df9d4ce6fe5ad6925d0.png" alt="组合继承图.png"></p>
+<p>从控制台打印的额结果看到，<code>subPName</code>被定义了两遍，它既在subClass的实例属性里，也在subClass的原型属性里。</p>
+<p>这个是JavaScript中最常用的继承模式，但是缺点就是原型链和实例属性会有重合的部分（但由于原型链的搜索原则，读取属性的时候优先读取实例的，所以不影响使用）。</p>
+<p>结合了原型链和借用构造函数两种方式的优点：</p>
+<ol>
+<li>能给超类型构造函数传参。</li>
+<li>能使用<code>instanceof</code>和<code>isPrototypeOf()</code>识别基于组合继承创建的对象。</li>
+<li>属性可以共享，也可以不共享。</li>
+</ol>
+<h4 id="原型式继承"><a href="#原型式继承" class="headerlink" title="原型式继承"></a>原型式继承</h4><p>道格拉斯 · 克罗克福特 介绍的一种实现继承的方法，<strong>这种方法并没有使用严格意义的构造函数</strong>。</p>
+<p>原理：不同的实例虽然构造函数不一样（各种副本），但是他们的构造函数都拥有一个共同的原型对象（指向的地址相同），所以实例之间始终共享原型对象的属性。</p>
+<p>特点： 它对不同对象的继承，都只依赖于一个通用的工厂函数，如<code>Object.create()</code>。</p>
+<p>用处：步骤最少最简单的继承方式。</p>
+<p>当年作者给出的通用工厂函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span>(<span class="params">pt</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> superClass = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">  superClass.prototype = pt;</div><div class="line">  <span class="keyword">return</span> superClass;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> shareObj = &#123;</div><div class="line">  <span class="attr">name</span>: <span class="string">'cc'</span>,</div><div class="line">  <span class="attr">friends</span>: [<span class="string">'Andy'</span>, <span class="string">'Sam'</span>]</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> ming = <span class="built_in">Object</span>.create(shareObj); <span class="comment">// 或者使用自定义的方法，var ming = object(shareObj); </span></div><div class="line"><span class="keyword">var</span> hong = <span class="built_in">Object</span>.create(shareObj);</div><div class="line">ming.name === hong.name; <span class="comment">// true</span></div><div class="line">ming.name = <span class="string">'ming'</span>;</div><div class="line">hong.name; <span class="comment">// 'cc', 因为ming.name的修改并没有修改原型上的name，只是为ming自己新增了属性。</span></div></pre></td></tr></table></figure>
+<p><code>Object.create()</code>，其实有两个参数，第一个是返回值的prototype，第二个参数是实例属性们。但需要定义自己的描述符：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> bai = <span class="built_in">Object</span>.create(shareObj, &#123;</div><div class="line">  <span class="attr">age</span>: &#123;</div><div class="line">    <span class="attr">value</span>: <span class="number">1</span>,</div><div class="line">    <span class="attr">writtable</span>: <span class="literal">false</span></div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="寄生式继承"><a href="#寄生式继承" class="headerlink" title="寄生式继承"></a>寄生式继承</h4><p>寄生式（parastic）继承很容易让人联想到寄生构造函数，他们也确实都有个共同点是用于==二次增强==。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subClass, supClass</span>) </span>&#123;</div><div class="line">  <span class="comment">// superPrototype.__proto__ === supClass.prototype; // true</span></div><div class="line">  <span class="keyword">var</span> superPrototype = <span class="built_in">Object</span>.create(supClass.prototype);<span class="comment">// 创建对象，其原型对象 = 父类的原型对象</span></div><div class="line">  superPrototype.constructor = subClass; <span class="comment">// 二次增强，不影响实例使用constructor找妈妈。</span></div><div class="line">  subClass.prototype = superPrototype; <span class="comment">// 形成原型链</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>很经典的一个函数，用于下面的寄生组合式继承中。</p>
+<h4 id="寄生组合式继承"><a href="#寄生组合式继承" class="headerlink" title="寄生组合式继承"></a>寄生组合式继承</h4><p>弥补组合式继承超类构造函数的会调用二次的缺点。</p>
+<p>让我们先回忆一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 父类</span></div><div class="line"><span class="keyword">var</span> superClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.supName = name; </div><div class="line">&#125;;</div><div class="line">superClass.prototype.supPName = <span class="string">'supPName'</span>;</div><div class="line"><span class="comment">// 子类</span></div><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  superClass.call(<span class="keyword">this</span>, name); <span class="comment">// superClass()执行第一遍</span></div><div class="line">  <span class="keyword">this</span>.subName = <span class="string">'sub'</span> + name;</div><div class="line">&#125;</div><div class="line">subClass.prototype = <span class="keyword">new</span> superClass();<span class="comment">// superClass()执行第二遍</span></div><div class="line">subClass.prototype.subPName = <span class="string">'subPName'</span>;</div><div class="line"><span class="comment">// 实例</span></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> subClass(<span class="string">'Instance'</span>);</div></pre></td></tr></table></figure>
+<p>第11行可以使用寄生式继承中的<code>inheritPrototype</code>来改造一下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">inheritPrototype(subClass, superClass);</div></pre></td></tr></table></figure>
+<p>这样superClass就不会多次调用了。</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a7ca9aad232659e4cd24cf980632f2a9.png" alt="寄生组合式继承图片.png"></p>
+<h3 id="从Babel编译ES6来看使用场景"><a href="#从Babel编译ES6来看使用场景" class="headerlink" title="从Babel编译ES6来看使用场景"></a>从Babel编译ES6来看使用场景</h3><p>Babel中将Class.extends的继承方式翻译成ES5就使用了这种继承方式。利用了这个函数：</p>
+<p>ES6:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SupClass</span> </span>&#123;</div><div class="line">  <span class="keyword">constructor</span>() &#123;</div><div class="line">    <span class="keyword">this</span>.name = <span class="string">'supName'</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">subClass</span> <span class="keyword">extends</span> <span class="title">SupClass</span> </span>&#123;</div><div class="line">  <span class="keyword">constructor</span>() &#123;</div><div class="line">    <span class="keyword">super</span>(); <span class="comment">// 一定有这行，否则不能使用this</span></div><div class="line">    <span class="keyword">this</span>.name = <span class="string">'subname'</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>寄生组合式继承关键的函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">_inherits</span>(<span class="params">subClass, superClass</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> superClass !== <span class="string">"function"</span> &amp;&amp; superClass !== <span class="literal">null</span>) &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">"Super expression must either be null or a function, not "</span> + <span class="keyword">typeof</span> superClass);</div><div class="line">  &#125;</div><div class="line">  subClass.prototype = <span class="built_in">Object</span>.create(superClass &amp;&amp; superClass.prototype, &#123;</div><div class="line">    <span class="attr">constructor</span>: &#123;</div><div class="line">      <span class="attr">value</span>: subClass,</div><div class="line">      <span class="attr">enumerable</span>: <span class="literal">false</span>,</div><div class="line">      <span class="attr">writable</span>: <span class="literal">true</span>,</div><div class="line">      <span class="attr">configurable</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">  <span class="keyword">if</span> (superClass) </div><div class="line">    <span class="built_in">Object</span>.setPrototypeOf ? <span class="built_in">Object</span>.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; <span class="comment">// 子类的this指向于superClass，以完成构造函数继承。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span> (<span class="params">_SupClass</span>) </span>&#123;</div><div class="line">  _inherits(subClass, _SupClass); <span class="comment">// 把subClass.prototype放到闭包中，不用每次新建实例都执行。</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">subClass</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    _classCallCheck(<span class="keyword">this</span>, subClass);</div><div class="line"></div><div class="line">    <span class="keyword">var</span> _this = _possibleConstructorReturn(<span class="keyword">this</span>, (subClass.__proto__ || <span class="built_in">Object</span>.getPrototypeOf(subClass)).call(<span class="keyword">this</span>)); <span class="comment">// 注意有.call，是有执行的。_this返回的是执行过superClass构造函数之后的this</span></div><div class="line"></div><div class="line">    _this.name = <span class="string">'subname'</span>;<span class="comment">// name属性放在了subClass.__proto__上，就是subClass</span></div><div class="line">    <span class="keyword">return</span> _this;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> subClass;</div><div class="line">&#125;(SupClass); <span class="comment">// 立即执行函数</span></div></pre></td></tr></table></figure>
+<h2 id="注"><a href="#注" class="headerlink" title="注"></a>注</h2><blockquote>
+<p>ECMAScript是由ECMA-262标准化的脚本语言的名称。JavaScript和JScript与ECMAScript相容，但包含超出ECMAScript的功能。</p>
+<p>—— WIKI百科</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>《JavaScript高级程序设计》</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;ES5的继承&quot;&gt;&lt;a href=&quot;#ES5的继承&quot; class=&quot;headerlink&quot; title=&quot;ES5的继承&quot;&gt;&lt;/a&gt;ES5的继承&lt;/h2&gt;&lt;p&gt;使用原型链的基本模式实现继承的例子：&lt;/p&gt;
+&lt;figure class=&quot;highlight js&quot;&gt;&lt;t
+    
+    </summary>
+    
+      <category term="jsBasic" scheme="http://blog.xiqian.me/categories/jsBasic/"/>
+    
+    
+      <category term="原型" scheme="http://blog.xiqian.me/tags/%E5%8E%9F%E5%9E%8B/"/>
+    
+      <category term="webpack" scheme="http://blog.xiqian.me/tags/webpack/"/>
+    
+      <category term="原型链" scheme="http://blog.xiqian.me/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/"/>
+    
+      <category term="继承" scheme="http://blog.xiqian.me/tags/%E7%BB%A7%E6%89%BF/"/>
+    
+      <category term="inherit" scheme="http://blog.xiqian.me/tags/inherit/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JS创建对象的几种方式</title>
+    <link href="http://blog.xiqian.me/jsBasic/How_To_Create_Object_In_JavaScript.html"/>
+    <id>http://blog.xiqian.me/jsBasic/How_To_Create_Object_In_JavaScript.html</id>
+    <published>2017-03-20T11:17:40.000Z</published>
+    <updated>2017-03-20T11:40:44.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="对象创建方式"><a href="#对象创建方式" class="headerlink" title="对象创建方式"></a>对象创建方式</h3><p>前三种比较常用，后三种是某些特殊情况下的变体。</p>
+<table>
+<thead>
+<tr>
+<th>创建方式名称</th>
+<th>说明</th>
+<th>特点</th>
+<th>缺点</th>
+<th>优点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工厂模式</td>
+<td>简单地封装到一个函数里</td>
+<td>显式地创建了对象</td>
+<td><strong>对象和构造函数之间没有什么关系</strong>。因为构造函数是<code>Object</code>，instaceof和constructor都不能用</td>
+<td></td>
+</tr>
+<tr>
+<td>构造函数模式</td>
+<td><code>new Class()</code>、首字母大写</td>
+<td>没有显式地创建对象、不需要return语句 &amp; this赋值、调用必须使用new</td>
+<td><strong>浪费内存</strong>：每新建一个实例，所有属性（包括可共用的）都独立申请了内存，例如函数</td>
+<td>可以将对象标识为一种特定类型（自定义构造函数的类型。建议通过instance）</td>
+</tr>
+<tr>
+<td>原型模式（通常+构造）</td>
+<td><code>new Class() + prototype</code></td>
+<td>最常用！！</td>
+<td>构造函数和原型的声明位置是分开的</td>
+<td><strong>节省内存</strong>: 共享属性放在构造函数的原型上</td>
+</tr>
+<tr>
+<td>动态原型模式</td>
+<td>同上 + 在构造函数中初始化原型</td>
+<td>把所有信息都封装到构造函数中</td>
+<td>需要保证原型只绑定一次：因为每次创建实例，构造函数都会执行一遍。</td>
+<td>原型的定义也放在构造函数中了。</td>
+</tr>
+<tr>
+<td>寄生构造函数</td>
+<td>new  + 工厂模式</td>
+<td>和工厂模式相比，更规范一些</td>
+<td>同工厂模式</td>
+<td>二次加工很方便。模块化经常这么用，因为可以有闭包，也方便单元测试。</td>
+</tr>
+<tr>
+<td>稳妥构造函数模式</td>
+<td>工厂模式 +   函数中只定义函数</td>
+<td>保证实例化出来的对象是“稳妥对象“，变量值只能通过函数来获取</td>
+<td>同工厂模式</td>
+</tr>
+</tbody>
+</table>
+<h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 声明 &amp; 定义</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">  o.name = name;</div><div class="line">  o.age = age;</div><div class="line">  <span class="keyword">return</span> o;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 调用</span></div><div class="line"><span class="keyword">var</span> animal1 = Animal(<span class="string">'cc'</span>, <span class="number">24</span>);</div></pre></td></tr></table></figure>
+<h3 id="构造函数模式"><a href="#构造函数模式" class="headerlink" title="构造函数模式"></a>构造函数模式</h3><p>==只有通过new调用自定义构造函数所创建的实例，原型链上才不仅仅只有内置对象，__proto__和construct这种才有意义==</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 声明</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.name = name;</div><div class="line">  <span class="keyword">this</span>.age = age;</div><div class="line">  <span class="keyword">this</span>.isHappy = <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;; <span class="comment">// 每次实例创建，都需要为这个函数重新申请一次内存空间</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// 调用</span></div><div class="line"><span class="keyword">var</span> animal1 = <span class="keyword">new</span> Animal();</div></pre></td></tr></table></figure>
+<p> 这种方式调用构造函数经历的步骤：</p>
+<ol>
+<li><p>创建一个新对象</p>
+</li>
+<li><p>this指向了这个对象</p>
+</li>
+<li><p>执行构造函数中的代码，为对象添加新的属性</p>
+</li>
+<li><p>返回这个新对象</p>
+<p>​</p>
+</li>
+</ol>
+<p>优势： 可以判断对象的类型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 只有Animal.prototype中的constructor等于默认的constructor，才成立</span></div><div class="line">animal1.constructor === Animal; <span class="comment">// true</span></div><div class="line">animal1.constructor === <span class="built_in">Object</span>; <span class="comment">// false</span></div><div class="line"><span class="comment">// 或者这种，更准确</span></div><div class="line">animal1 <span class="keyword">instanceof</span> Animal; <span class="comment">// true; </span></div><div class="line">animal1 <span class="keyword">instanceof</span> <span class="built_in">Object</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h3 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h3><p>将“构造函数”模式的实例代码中，函数部分移到prototype中。</p>
+<p>这样既可以保证了不变的属性不浪费内存，又保证了可变的属性在不同实例中互不影响。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 声明</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.name = name;</div><div class="line">  <span class="keyword">this</span>.age = age;</div><div class="line">&#125;</div><div class="line">Animal.prototype.isHappy = <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;;<span class="comment">// 注意不要轻易给prototype重新赋值（ANimal.prototype = &#123;isHappy: ..&#125;）。因为会造成Animal.prototype.constructor丢失。</span></div><div class="line"><span class="keyword">var</span> animal1 = <span class="keyword">new</span> Animal();</div><div class="line">animal1.isHappy();</div></pre></td></tr></table></figure>
+<h3 id="动态原型模式"><a href="#动态原型模式" class="headerlink" title="动态原型模式"></a>动态原型模式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 声明</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.name = name;</div><div class="line">  <span class="keyword">this</span>.age = age;</div><div class="line">  <span class="keyword">if</span>(!<span class="keyword">this</span>.isHappy) &#123; <span class="comment">// 防止定义原型属性</span></div><div class="line">    Animal.prototype.isHappy = <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;; <span class="comment">// 注意不能用对象字面量形式创建新原型，因为会切断已创建的实例与新原型之间的联系。</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="寄生构造函数模式"><a href="#寄生构造函数模式" class="headerlink" title="寄生构造函数模式"></a>寄生构造函数模式</h3><p>寄生 - parasitic [pærə’sɪtɪk]</p>
+<p>和工厂模式比，只是多了个new而已，而这个new加不加对使用没有任何影响。</p>
+<p>但是书中的例子，使用<strong>这种模式对内置对象进行自定义封装</strong>的做法是很值得借鉴的。看起来比工厂模式更专业。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyArray</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>);</div><div class="line">  <span class="keyword">var</span> values = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">  values.push.apply(values, <span class="built_in">arguments</span>);<span class="comment">// arguments为数组类型，不能直接当做push的参数，否则会变成values = [[1，2，3，4，5]];巧妙的使用了apply第二个参数是数组的特点。相当于values.push(1,2,3,4,5);</span></div><div class="line">  values.toString = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.join(<span class="string">'|'</span>);</div><div class="line">  &#125;; <span class="comment">// **二次加工**</span></div><div class="line">  <span class="keyword">return</span> values;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> ma1 = <span class="keyword">new</span> MyArray(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">9</span>);</div><div class="line">ma1.constructor !== MyArray; <span class="comment">// true, 无法依赖constructor和instanceof操作符来确定对象类型</span></div><div class="line">ma1.constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h3 id="稳妥构造函数模式"><a href="#稳妥构造函数模式" class="headerlink" title="稳妥构造函数模式"></a>稳妥构造函数模式</h3><p>durable objects 稳妥对象，没有公共属性，this为空的对象。对象的变量只能通过其函数获取。</p>
+<p>通常在一些要求安全的环境中（禁止使用this和new）等中使用。</p>
+<p>基本和工厂模式形式一样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 声明 &amp; 定义</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">  o.getName = <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">return</span> name;</div><div class="line">  o.getAge = <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">return</span> age;</div><div class="line">  <span class="keyword">return</span> o;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 调用</span></div><div class="line"><span class="keyword">var</span> animal1 = Animal(<span class="string">'cc'</span>, <span class="number">24</span>);</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;对象创建方式&quot;&gt;&lt;a href=&quot;#对象创建方式&quot; class=&quot;headerlink&quot; title=&quot;对象创建方式&quot;&gt;&lt;/a&gt;对象创建方式&lt;/h3&gt;&lt;p&gt;前三种比较常用，后三种是某些特殊情况下的变体。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;创
+    
+    </summary>
+    
+      <category term="jsBasic" scheme="http://blog.xiqian.me/categories/jsBasic/"/>
+    
+    
+      <category term="constructor，prototype" scheme="http://blog.xiqian.me/tags/constructor%EF%BC%8Cprototype/"/>
+    
+      <category term="原型" scheme="http://blog.xiqian.me/tags/%E5%8E%9F%E5%9E%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JS对象属性的特征</title>
+    <link href="http://blog.xiqian.me/jsBasic/Javascript_Object_Attributes_Of_JavaScript.html"/>
+    <id>http://blog.xiqian.me/jsBasic/Javascript_Object_Attributes_Of_JavaScript.html</id>
+    <published>2017-03-20T11:14:58.000Z</published>
+    <updated>2017-03-20T11:40:54.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>对象是无序属性的集合，其属性可以包含基本值、对象或者函数<br>每个属性(property)有自己的特征(<strong>attribute</strong>)，比如是否可读、是否可枚举等等。这些特征只有内部才用（我理解的“内部”是只有编译引擎才会去使用）。<br>同[[proto]]一样，这些attributes也放在方括号里。</p>
+</blockquote>
+<p>注意在代码中它们都是首字母小写的：</p>
+<ul>
+<li>[[Writable]] 能否修改属性的值。</li>
+<li>[[Configurable]] <ol>
+<li>能否通过delete删除。</li>
+<li>能否修改属性的特征attribute。</li>
+<li>能否增加属性特征，如set、get。将其转换为访问器属性。（增加了就不能直接获取值了吗）</li>
+</ol>
+</li>
+<li>[[Enumerable]]能否通过for-in返回属性。</li>
+<li>[[Value]] 属性的值</li>
+<li>[[Get]] 读取属性调用的函数，读取出来的为它的返回值</li>
+<li>[[Set]] 写入属性调用的函数</li>
+</ul>
+<h3 id="速查"><a href="#速查" class="headerlink" title="速查"></a>速查</h3><p>首先定义一个我们想要探索的几种情况的对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;</div><div class="line">  <span class="attr">commonType</span>: <span class="number">2</span></div><div class="line">&#125;;</div><div class="line"><span class="built_in">Object</span>.defineProperties(obj, &#123;</div><div class="line">   <span class="attr">dateType</span>: &#123;</div><div class="line">     <span class="attr">value</span>: <span class="number">1</span></div><div class="line">   &#125;,</div><div class="line">   <span class="attr">visitedNoSetType</span>: &#123;</div><div class="line">     <span class="attr">get</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">       <span class="keyword">return</span> <span class="string">'visitedWithSetType'</span>;</div><div class="line">     &#125;</div><div class="line">   &#125;,</div><div class="line">   <span class="attr">visitedWithSetType</span>: &#123;</div><div class="line">     <span class="attr">get</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">       <span class="keyword">return</span> <span class="string">'visitedNoSetType'</span>;</div><div class="line">     &#125;,</div><div class="line">     <span class="attr">set</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">       <span class="keyword">this</span>.visitedNoSetType =<span class="string">'new'</span>;</div><div class="line">     &#125;</div><div class="line">   &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>根据上面的实例代码知道不同方式defineProperties的默认值：</p>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>[[writable]]</th>
+<th>[[Configurable]]</th>
+<th>[[Enumerable]]</th>
+<th>[[Value]]</th>
+<th>[[Getter]]</th>
+<th>类型</th>
+<th>[[Setter]]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>commonType</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>2</td>
+<td>\</td>
+<td>数据属性</td>
+<td>\</td>
+</tr>
+<tr>
+<td>dateType</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>1</td>
+<td>\</td>
+<td>数据属性</td>
+<td>\</td>
+</tr>
+<tr>
+<td>visitedWithSetType</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>\</td>
+<td>function</td>
+<td>访问器属性</td>
+<td>undefine</td>
+</tr>
+<tr>
+<td>visitedNoSetType</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>\</td>
+<td>function</td>
+<td>访问器属性</td>
+<td>function</td>
+</tr>
+</tbody>
+</table>
+<h3 id="对象的属性分类"><a href="#对象的属性分类" class="headerlink" title="对象的属性分类"></a>对象的属性分类</h3><ol>
+<li>访问器属性：[[Get]], [[Set(可选)]][[Enumerable]], [[Configurable]]</li>
+<li>数据属性：[[Value]], [[Enumerable]], [[Configurable]]</li>
+</ol>
+<h3 id="操作属性特征的方法"><a href="#操作属性特征的方法" class="headerlink" title="操作属性特征的方法"></a>操作属性特征的方法</h3><p>definePropert* 系列的默认值都为false；</p>
+<ol>
+<li>定义对象总的一个变量，并且修改他的attribute：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(obj, key, &#123;</div><div class="line">    <span class="attr">Configurable</span>:..,</div><div class="line">    <span class="attr">Writable</span>: ..,</div><div class="line">    ..</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperties(obj, &#123;</div><div class="line">  <span class="attr">key1</span>: &#123;<span class="attr">value</span>: <span class="string">'v'</span>&#125;,</div><div class="line">  <span class="attr">key2</span>: &#123;</div><div class="line">    <span class="attr">get</span>: <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;,</div><div class="line">    <span class="attr">set</span>: <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;,</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">key3</span>: &#123;</div><div class="line">    <span class="attr">configuration</span>: <span class="literal">false</span></div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<ol>
+<li>如何读取对象中某个变量的所有attribute：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.getOwnPopertyDescriptor(object, name)</div><div class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptors(object);</div></pre></td></tr></table></figure>
+<ol>
+<li><p>如何读取对象中某个变量的某个attribute:</p>
+<ul>
+<li><strong>注意这个是在原型上</strong></li>
+</ul>
+<p>​       <code>Object.prototype.propertyIsEnumerable(key)</code></p>
+</li>
+<li><p>变量已定义，如何修改某一个attribute:</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var obj = &#123;</div><div class="line">  name: 1</div><div class="line">&#125;;</div><div class="line">obj.__defineGetter__(&apos;name&apos;, function() &#123;&#125;);// get优先级比value高，这样name就变成了访问器属性</div><div class="line">obj.__defineSetter__(&apos;name&apos;, function() &#123;&#125;);</div></pre></td></tr></table></figure>
+<p>参考: </p>
+<ul>
+<li>《javascript高级教程》</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;对象是无序属性的集合，其属性可以包含基本值、对象或者函数&lt;br&gt;每个属性(property)有自己的特征(&lt;strong&gt;attribute&lt;/strong&gt;)，比如是否可读、是否可枚举等等。这些特征只有内部才用（我理解的“内部”是只有编译引擎才会
+    
+    </summary>
+    
+      <category term="jsBasic" scheme="http://blog.xiqian.me/categories/jsBasic/"/>
+    
+    
+      <category term="Configuable" scheme="http://blog.xiqian.me/tags/Configuable/"/>
+    
+      <category term="Enumerable" scheme="http://blog.xiqian.me/tags/Enumerable/"/>
+    
+      <category term="Writable" scheme="http://blog.xiqian.me/tags/Writable/"/>
+    
+      <category term="Get" scheme="http://blog.xiqian.me/tags/Get/"/>
+    
+      <category term="Set" scheme="http://blog.xiqian.me/tags/Set/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>读书笔记：你不知道的js - 第一章,第二章</title>
+    <link href="http://blog.xiqian.me/readingNotes/book-of-you-dont-know-js-1.html"/>
+    <id>http://blog.xiqian.me/readingNotes/book-of-you-dont-know-js-1.html</id>
+    <published>2017-02-19T04:37:38.000Z</published>
+    <updated>2017-03-16T01:56:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="第一章-类型"><a href="#第一章-类型" class="headerlink" title="第一章 类型"></a>第一章 类型</h2><h3 id="1-undefined-和-undeclared"><a href="#1-undefined-和-undeclared" class="headerlink" title="1. undefined 和 undeclared"></a>1. undefined 和 undeclared</h3><ul>
+<li><p>undefined（未定义）<br> 已经在作用域中声明了，但是没定义/赋值。</p>
+</li>
+<li><p>undeclared（未声明）<br> 还没有在作用域中声明过的变量。<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/48d518000866fa0583a646b69136aee1" alt="screenshot"></p>
+</li>
+<li><p>关系</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">type <span class="keyword">of</span> undeclared === <span class="string">'undefined'</span>;<span class="comment">// true</span></div></pre></td></tr></table></figure>
+<p>注意： 正常使用了未声明的变量会报错，但是typeof有特殊的<strong>安全防护机制</strong>，并不会在控制台报错 。</p>
+</li>
+</ul>
+<h3 id="2-typeof"><a href="#2-typeof" class="headerlink" title="2. typeof"></a>2. typeof</h3><ul>
+<li><p>typeof的参数为什么不用括号括起来？因为它是个<strong>操作符</strong>，不是函数。</p>
+</li>
+<li><p>在对变量执行typeof操作是，得到的不是该变量的类型，而是该变量持有的值的类型，==<strong>因为js中的变量没有类型</strong>==。</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/93a8d1b32d8bba3301c31c030d56ee70" alt="_1"></p>
+</li>
+<li><p>typeof 的返回值为string, 小写。而其实基本数据类型的构造函数是首字母大写的(String)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typeof</span> <span class="keyword">typeof</span> <span class="number">1</span>;<span class="comment">// "string"</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>用途</p>
+<ul>
+<li><p>若要用typeof，则只能使用<strong>复合条件</strong>来检测是否为null值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="literal">null</span>;</div><div class="line"><span class="keyword">if</span>(!a &amp;&amp; <span class="keyword">typeof</span> a ===<span class="string">"object"</span>)&#123;&#125;; <span class="comment">//true</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>“如何在程序中检查全局变量或者局部变量才不会出现ReferenceError错误？”  </p>
+<ul>
+<li><p>错误：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(b)&#123;&#125;; <span class="comment">// 抛出undeclared异常</span></div></pre></td></tr></table></figure>
+<p> 但如果b是一个函数的参数，那不会抛异常，而且可以这么用。</p>
+</li>
+<li><p>正确：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(<span class="keyword">typeof</span> b=== <span class="string">'undefined'</span>)&#123;&#125;; <span class="comment">// true表示不存在</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>全局变量还可带window来查询，不会抛出referenceerror错误。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(<span class="built_in">window</span>.b)&#123;&#125;; <span class="comment">// true表示存在</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-js中奇葩的假值"><a href="#3-js中奇葩的假值" class="headerlink" title="3. js中奇葩的假值"></a>3. js中奇葩的假值</h3><p>即强制转换为布尔值，返回false的。</p>
+<ul>
+<li>false</li>
+<li>null</li>
+<li>undefined</li>
+<li>空字符串</li>
+<li>NAN</li>
+<li>0</li>
+<li>其他值均为真</li>
+</ul>
+<p>注意: 负数也是返回true的</p>
+<h2 id="第二章-值"><a href="#第二章-值" class="headerlink" title="第二章 值"></a>第二章 值</h2><p>概要：数组、字符串、数字</p>
+<h3 id="1-数组"><a href="#1-数组" class="headerlink" title="1. 数组"></a>1. 数组</h3><ul>
+<li><p>特点：js中的数组为动态大小，可以塞入任何类型的值。</p>
+</li>
+<li><p>声明</p>
+<ul>
+<li>var a=[];</li>
+<li>var a=[1,2,3];</li>
+<li>var a = new Array(3);// 3为数组长度</li>
+<li>var a = Array(3);// 同上</li>
+</ul>
+</li>
+<li><p>稀疏数组：至少包含一个“空单元”的数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [];</div><div class="line">a.length = <span class="number">4</span>; <span class="comment">//  创建一个长度为4的空数组</span></div><div class="line"><span class="built_in">console</span>.info(a); <span class="comment">// []</span></div><div class="line">a[<span class="number">3</span>] = <span class="number">1</span>;</div><div class="line"><span class="built_in">console</span>.info(<span class="number">1</span>);<span class="comment">// [undefined × 2, 1, undefined × 1]</span></div></pre></td></tr></table></figure>
+<p>注意：稀疏数组中的空缺单元和直接赋值元素为undefined是不一样的。  </p>
+<p>​<br>然而书上也没有说仔细。我理解是空缺单元只是总长度加1，并没有申请变量空间。而undefined类似变量已经声明为赋值，是实实在在存在的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">3</span>);</div><div class="line"><span class="keyword">var</span> b = [<span class="literal">undefined</span>, <span class="literal">undefined</span>, <span class="literal">undefined</span>];</div><div class="line"><span class="keyword">var</span> c = [];</div><div class="line">c.length = <span class="number">3</span>;</div></pre></td></tr></table></figure>
+<p>Output:<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/8bb71726e8e5f42bb90f53a6c249b0ee" alt="screenshot">    </p>
+</li>
+<li><p>类数组</p>
+<ul>
+<li><p>定义</p>
+<ul>
+<li>拥有length属性。</li>
+<li>不具有数组所具有的方法。不是数组的定义方式初始化的（Array()或者[]）</li>
+</ul>
+</li>
+<li><p>实例</p>
+<ol>
+<li>DOM查询操作会返回DOM元素列表<code>document.getElementsByTagName()</code></li>
+<li>函数的arguments对象（参数列表）（ES6开始已废止）<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a6d619fc8be0dc9034ca34dfddbd9220" alt="screenshot"></li>
+</ol>
+</li>
+<li><p>判断类数组的方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">function</span> <span class="title">isArrayLike</span>(<span class="params">o</span>) </span>&#123;</div><div class="line"><span class="keyword">if</span> (o &amp;&amp;                                <span class="comment">// o is not null, undefined, etc.</span></div><div class="line">   <span class="keyword">typeof</span> o === <span class="string">'object'</span> &amp;&amp;            <span class="comment">// o is an object</span></div><div class="line">   <span class="built_in">isFinite</span>(o.length) &amp;&amp;               <span class="comment">// o.length is a finite number不是无穷大且不是数字</span></div><div class="line">   o.length &gt;= <span class="number">0</span> &amp;&amp;                    <span class="comment">// o.length is non-negative</span></div><div class="line">   o.length===<span class="built_in">Math</span>.floor(o.length) &amp;&amp;  <span class="comment">// o.length is an integer</span></div><div class="line">   o.length &lt; <span class="number">4294967296</span>)              <span class="comment">// o.length &lt; 2^32</span></div><div class="line">   <span class="keyword">return</span> <span class="literal">true</span>;                        <span class="comment">// Then o is array-like</span></div><div class="line"><span class="keyword">else</span></div><div class="line">   <span class="keyword">return</span> <span class="literal">false</span>;                       <span class="comment">// Otherwise it is not</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>类数组转化为数组</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>);<span class="comment">// ES5，slice() 方法会浅复制（shallow copy）数组的一部分到一个新的数组，并返回这个新数组</span></div><div class="line"><span class="keyword">var</span> arr = <span class="built_in">Array</span>.from(<span class="built_in">arguments</span>);<span class="comment">// ES6</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>奇葩的用法</p>
+<ul>
+<li><p>数组也是对象，可以有对象的属性。比如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line">a.name =<span class="string">"数组"</span>;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>当数组的下标是字符串，但是能转成字符串时，依然算作数组的元素。否则算作对象的属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [];</div><div class="line">a[<span class="string">"4"</span>] = <span class="number">6</span>; <span class="comment">// 数组的元素</span></div><div class="line">a.length; <span class="comment">// 5</span></div><div class="line">a[<span class="string">'name'</span>] = <span class="string">'xq'</span>;<span class="comment">// 对象的属性</span></div><div class="line">a.length;<span class="comment">// 5</span></div><div class="line">a.name;<span class="comment">// 'xq'</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-字符串"><a href="#2-字符串" class="headerlink" title="2. 字符串"></a>2. 字符串</h3><ul>
+<li><p>定义：一组由16位值组成的不可变的有序序列。</p>
+</li>
+<li><p>JS中字符串不是字符数组。虽然他们都是<strong><em>类数组</em></strong><br> “foo” 不等于[“f”,”o”,”o”]</p>
+</li>
+<li><p>js中字符串是不可变的，而数组是可变的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [<span class="string">'O'</span>,<span class="string">'C'</span>,<span class="string">'T'</span>];</div><div class="line"><span class="keyword">var</span> b = <span class="string">'OCT'</span>;</div><div class="line">a[<span class="number">0</span>] = <span class="string">'C'</span>;</div><div class="line">b[<span class="number">0</span>] = <span class="string">'C'</span>;</div><div class="line">a;<span class="comment">// ['A','C''T']</span></div><div class="line">b;<span class="comment">// 'OCT'</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>字符串拥有数组的不改变元素值的方法：indexOf(),concat(),但不拥有reverse()等会改变原本值的方法 。</p>
+</li>
+</ul>
+<h3 id="3-数字"><a href="#3-数字" class="headerlink" title="3. 数字"></a>3. 数字</h3><p>JavaScript只有一种数值类型： number，包括“整数”和带小数的十进制数。</p>
+<h4 id="3-1-“整数“"><a href="#3-1-“整数“" class="headerlink" title="3.1 “整数“"></a>3.1 “整数“</h4><blockquote>
+<p>JavaScript没有真正意义上的整数。</p>
+</blockquote>
+<p>javascript中的“整数”是”双精度浮点数“（java中的double），64位二进制。我们平时所称的”整数“只是没有小数位的浮点数。</p>
+<ul>
+<li><p>整数检测</p>
+<ul>
+<li><p>ES6</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Number</span>.isInteger(<span class="number">42.000</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>ES5</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typeof</span> param === <span class="string">"number"</span> &amp;&amp; num % <span class="number">1</span> == <span class="number">0</span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>进制表示法</p>
+<p>因为容易混淆，建议字母使用小写。</p>
+<p>二进制： 0b1010001 或者  0B1010001</p>
+<p>八进制： 0o363 或者 0O363 （注释：零+欧）</p>
+<p>十六进制:  0x33 或者 0X33</p>
+</li>
+<li><p><strong>精度丢失问题</strong></p>
+<p>javascript中的数据是双精度浮点类型的，可以得到它的数值范围，图列出大于0的情况：</p>
+<p> <img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/f85be36da748b0c4ce07ed164d419b68.png" alt="screenshot.png"></p>
+</li>
+<li><p>为什么最大浮点数那么大？</p>
+<p>比如，3位表示整数只能表示8个，而表示小数根据小数点的摆放位置，可以有8<em>4种。计算机里面的二进制数字分为固点数和浮点数，这个点就是值得小数点。</em></p>
+<p>​</p>
+</li>
+<li><p>也正因为它是浮点型的，导致存在精度丢失的问题。</p>
+<p>如图：</p>
+<p> <img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/cd370eb0bdceb89da1ffb79ffe68d84c.png" alt="screenshot.png"></p>
+<p>这是因为0.1和0.2转换为二进制，都是无限循环的二进制小数，计算机没有那么多位数给他们存。计算机会通过一定的算法对超出的位数进行截断，所以存在精度丢失的问题。</p>
+<p>还记得怎么把小数转换成二进制吧？以0.1为例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">(<span class="number">1</span>) <span class="number">0.1</span> x <span class="number">2</span> = <span class="number">0.2</span>  取整数位 <span class="number">0</span> 得 <span class="number">0.0</span></div><div class="line">(<span class="number">2</span>) <span class="number">0.2</span> x <span class="number">2</span> = <span class="number">0.4</span>  取整数位 <span class="number">0</span> 得 <span class="number">0.00</span></div><div class="line">(<span class="number">3</span>) <span class="number">0.4</span> x <span class="number">2</span> = <span class="number">0.8</span>  取整数位 <span class="number">0</span> 得 <span class="number">0.000</span></div><div class="line">(<span class="number">4</span>) <span class="number">0.8</span> x <span class="number">2</span> = <span class="number">1.6</span>  取整数位 <span class="number">1</span> 得 <span class="number">0.0001</span></div><div class="line">(<span class="number">5</span>) <span class="number">0.6</span> x <span class="number">2</span> = <span class="number">0.2</span>  取整数位 <span class="number">1</span> 得 <span class="number">0.00011</span></div><div class="line">(<span class="number">6</span>) <span class="number">0.2</span> x <span class="number">2</span> = <span class="number">0.4</span>  取整数位 <span class="number">0</span> 得 <span class="number">0.000110</span></div><div class="line">(<span class="number">7</span>) <span class="number">0.4</span> x <span class="number">2</span> = <span class="number">0.8</span>  取整数位 <span class="number">0</span> 得 <span class="number">0.0001100</span></div><div class="line">(<span class="number">8</span>) <span class="number">0.8</span> x <span class="number">2</span> = <span class="number">1.6</span>  取整数位 <span class="number">1</span> 得 <span class="number">0.00011001</span></div><div class="line">(<span class="number">9</span>) <span class="number">0.6</span> x <span class="number">2</span> = <span class="number">1.2</span>  取整数位 <span class="number">1</span> 得 <span class="number">0.000110011</span></div><div class="line">……</div></pre></td></tr></table></figure>
+<p>最终0.1转换为二进制为0.0001100110011……可以得出0.1，0.2，0.4，0.6，0.8 在二进制中都是无限循环的小数。因此0.1和0.2分别都有精度丢失，最终的计算结果难免不准确。</p>
+</li>
+<li><p>那么，怎样的两个数看做相等呢？</p>
+<p>由于精度丢失，导致违反了我们的认知，本来0.1+0.2 === 0.3 应该返回true的。那么，有没有一个标准判断两个相近的数可以看做是相等呢？</p>
+<p>javascript中有定义一个误差范围（ES6:Number.ESILON;ES5:2^-52）, 通常称为“机器精度”。</p>
+</li>
+</ul>
+<h4 id="3-2-特殊的数字"><a href="#3-2-特殊的数字" class="headerlink" title="3.2 特殊的数字"></a>3.2 特殊的数字</h4><ul>
+<li><p>NaN = not a number</p>
+<blockquote>
+<p> NaN是一个”警戒值”，即“执行数学运算没有成功，这是失败后返回的结果”</p>
+</blockquote>
+<p>如果数学运算的操作数不是数据类型（或无法转换成数据类型），整个运算就返回NaN。如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="number">2</span>/<span class="string">"c"</span>; <span class="comment">//last无法转换为数据类型, a = NaN</span></div><div class="line"><span class="keyword">var</span> a =<span class="number">2</span>/<span class="string">"1"</span>; <span class="comment">// 1可以转换为数据类型，a=2</span></div></pre></td></tr></table></figure>
+<ul>
+<li><strong>NaN仍然是数字类型</strong></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typeof</span> <span class="literal">NaN</span> === <span class="string">"number"</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<ul>
+<li><p>NaN是<strong>唯一一个非自反</strong>（x===x为false）的值</p>
+<p>可以理解为不是数字的原因有很多种，不能一概而论。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="literal">NaN</span> === <span class="literal">NaN</span>; <span class="comment">// false</span></div><div class="line"><span class="literal">NaN</span> == <span class="literal">NaN</span>; <span class="comment">// false</span></div><div class="line"><span class="literal">NaN</span> != <span class="literal">NaN</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<p>利用这个特点，可以检验当前变量是否是NaN（不是数字的数字）。（ES6中已经加了工具函数Number.isNaN(..),但ES5中没有好用的）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(!<span class="built_in">Number</span>.isNaN) &#123;</div><div class="line">  <span class="built_in">Number</span>.isNaN = <span class="function"><span class="keyword">function</span>(<span class="params">n</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> n!==n; <span class="comment">// 返回true的话就是NaN</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注：ES5中有一个工具函数window.isNaN(..)有严重bug，不要使用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.isNaN(<span class="string">"foo"</span>);<span class="comment">// 返回true</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>无穷数</p>
+<p>当数学运算结果溢出时，javascript并不会像其他语言一样抛异常，而是返回无穷数。例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="number">1</span>/<span class="number">0</span>; <span class="comment">// Infinity</span></div><div class="line"><span class="keyword">var</span> b = <span class="number">-1</span>/<span class="number">0</span>;<span class="comment">// -Infinity</span></div></pre></td></tr></table></figure>
+<p>如上所示，无穷数有负的无穷数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="literal">Infinity</span>/<span class="literal">Infinity</span> = <span class="literal">NaN</span>;<span class="comment">// 由于未定义该操作，所以返回NaN</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>零值</p>
+<p>分为常规0和-0。乘法和除法会得到负零，减法和加法不会。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span>/<span class="number">-3</span>; <span class="comment">// 返回-0</span></div><div class="line"><span class="number">1</span>/<span class="literal">Infinity</span>; <span class="comment">//返回0</span></div><div class="line"><span class="number">-1</span>/<span class="literal">Infinity</span>; <span class="comment">//返回-0</span></div></pre></td></tr></table></figure>
+<p>-0的出现让人困惑， 但是这是和js这门语言的应用场景相关的。</p>
+<p>比如动画帧的移动速度，就需要使用数字的符号来表示移动的方向，如果0没有负值，那么当速度为0时，丢失了方向信息。</p>
+</li>
+</ul>
+<h4 id="附：数字相关的函数"><a href="#附：数字相关的函数" class="headerlink" title="附：数字相关的函数"></a>附：数字相关的函数</h4><table>
+<thead>
+<tr>
+<th>所在对象</th>
+<th>使用</th>
+<th>解释</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Math</td>
+<td>Math.pow(x,y)</td>
+<td>x 的 y 次幂</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Math.abs(n1-n2)</td>
+<td>取计算结果的绝对值</td>
+<td></td>
+</tr>
+<tr>
+<td>Number</td>
+<td>Number.MAX_VALUE</td>
+<td>=1.7976931348623157e+308</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Number.POSITIVE_INFINITY</td>
+<td>= Infinity</td>
+<td>等于正无穷大</td>
+</tr>
+<tr>
+<td>Number.prototype</td>
+<td>(500000).toExponential()</td>
+<td>= “5e+5”</td>
+<td>数字转换为指数格式（字符串）</td>
+</tr>
+<tr>
+<td></td>
+<td>(4.320).toFixed(3)</td>
+<td>= “42.320”</td>
+<td>保留3位小数，无四舍五入</td>
+</tr>
+<tr>
+<td></td>
+<td>(4.320).toPrecision(4);</td>
+<td>= “4.320”</td>
+<td>小数+整数一共4位。截断的四舍五入，不够的用0补充</td>
+</tr>
+</tbody>
+</table>
+<h3 id="顺带笔记的"><a href="#顺带笔记的" class="headerlink" title="顺带笔记的"></a>顺带笔记的</h3><ul>
+<li><a href="http://www.w3school.com.cn/jsref/jsref_obj_array.asp" target="_blank" rel="external">W3C数组方法</a></li>
+<li>isFinite()<br>如果 number 是有限数字（或可转换为有限数字），那么返回 true。否则，如果 number 是 NaN（非数字），或者是正、负无穷大的数，则返回 false。</li>
+<li>arrayObject.concat(arrayX,arrayX,……,arrayX)<br>连接数组，返回副本。</li>
+<li>arrayObject.slice(start,end)<br>返回副本，浅复制。<br>从已有的数组中返回选定的元素。(坐标0开始)<br>参数为空默认全部选定，用于转化类数组。</li>
+<li>forEach()</li>
+<li>arrayObject.splice(index,howmany,item1,…..,itemX)<br>删除指定元素并用新元素取代</li>
+</ul>
+<h3 id="英文术语"><a href="#英文术语" class="headerlink" title="英文术语"></a>英文术语</h3><ul>
+<li>empty slot 空白单元</li>
+<li>sparse array 稀疏数组</li>
+<li>shallow copy 浅复制</li>
+<li>无穷数字<ul>
+<li>compiler error 编译错误( c语言中 )</li>
+<li>runtime exception 运行时错误( c语言中 )</li>
+<li>finite numeric representation 有限数字表示法</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;第一章-类型&quot;&gt;&lt;a href=&quot;#第一章-类型&quot; class=&quot;headerlink&quot; title=&quot;第一章 类型&quot;&gt;&lt;/a&gt;第一章 类型&lt;/h2&gt;&lt;h3 id=&quot;1-undefined-和-undeclared&quot;&gt;&lt;a href=&quot;#1-undefined-和
+    
+    </summary>
+    
+      <category term="readingNotes" scheme="http://blog.xiqian.me/categories/readingNotes/"/>
+    
+    
+      <category term="你不知道的js" scheme="http://blog.xiqian.me/tags/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>js中的几种遍历方式</title>
+    <link href="http://blog.xiqian.me/jsBasic/Ways-of-loop-in-javascript.html"/>
+    <id>http://blog.xiqian.me/jsBasic/Ways-of-loop-in-javascript.html</id>
+    <published>2017-02-12T08:54:40.000Z</published>
+    <updated>2017-02-12T12:12:32.000Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="几种循环方式对比"><a href="#几种循环方式对比" class="headerlink" title="几种循环方式对比"></a>几种循环方式对比</h4><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>简介</th>
+<th>入参</th>
+<th>原生</th>
+<th>适用对象</th>
+<th>this</th>
+<th>跳出循环块</th>
+<th>直接进入下一次循环</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>for(var i=0;i&lt;v.length;i++) {}</td>
+<td>basic</td>
+<td></td>
+<td>yes</td>
+<td>array，伪数组(domList)</td>
+<td>window</td>
+<td>break</td>
+<td>continue</td>
+<td></td>
+</tr>
+<tr>
+<td>for(key in list) {}</td>
+<td>枚举对象的所有可枚举的属性，包括原型</td>
+<td>若list为数组，则key为当前索引；若list为对象，key为当前的属性值，value通过list[one]获得</td>
+<td>yes</td>
+<td>array[key会转化且无序，不适合], domList, objWithProto</td>
+<td>window</td>
+<td>break</td>
+<td>continue</td>
+<td><strong>会遍历出原型的值</strong>。他是无序的。key会转换为字符串。</td>
+</tr>
+<tr>
+<td>array.forEach(one) {}</td>
+<td>Array.prototype.forEach</td>
+<td>one是array中的当前位置的元素</td>
+<td>yes</td>
+<td>array</td>
+<td>window</td>
+<td>无</td>
+<td>无</td>
+<td><strong>不能自定义退出循环</strong></td>
+</tr>
+<tr>
+<td>array.map(function(currentValue, index, array) {},newThis);</td>
+<td>Array.prototype.Map</td>
+<td></td>
+<td>yes</td>
+<td>array</td>
+<td>可以通过第三个参数所在作用域（this的值）</td>
+<td></td>
+<td></td>
+<td>会将返回值拼成数组</td>
+</tr>
+<tr>
+<td>$.map（array,  function(value,key) {}）</td>
+<td>原理和$.each是一样的，除了将callback的返回值装入了一个数组，并且返回、this指向window之外。</td>
+<td></td>
+<td>Jquery</td>
+<td>array,domList，obj(会有原型)</td>
+<td>window</td>
+<td>无</td>
+<td>无</td>
+<td>同each, 特定条件下会返回原型；并且是无序的；more:他的value和key位置是返的</td>
+</tr>
+<tr>
+<td>$.each(aray, function(key,value))</td>
+<td>源码中，如果满足条件的对象，相当于 for in；否则是普通for</td>
+<td>若list为数组，则key为当前索引；若list为对象，key为当前的属性值，value通过list[one]获得</td>
+<td>Jquery</td>
+<td>array,dom,obj(会有原型)</td>
+<td>当前属性的值。如果不是对象类型，则value转换成对象形式，如<code>Boolean {[[PrimitiveValue]]: true}</code></td>
+<td>return false;</td>
+<td>return true;</td>
+<td><strong>若<code>length === undefined</code>或者<code>jQuery.isFunction( object );</code>, 会遍历出原型；他是无序的。</strong></td>
+</tr>
+<tr>
+<td>$(selector).each(function(index,element, otherPramter))</td>
+<td>同上</td>
+<td></td>
+<td>Jquery</td>
+<td>dom</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>for(let value of array)</td>
+<td>弥补forEach的缺点，可以遍历dom，且能退出；弥补for in的缺点，还可以遍历dom(无原型)</td>
+<td></td>
+<td>ES6</td>
+<td>array,dom</td>
+<td>window</td>
+<td>break</td>
+<td>continue</td>
+<td>遍历对象需要额外处理；但他是有序的。</td>
+</tr>
+</tbody>
+</table>
+<p>这里我们要测试三种常用的数据种类：</p>
+<ol>
+<li><p>array</p>
+<p><code>var array = [1,2,3];</code></p>
+<p>这是标准的数组，拥有Array.prototype的属性。</p>
+<p><code>array instanceof Array</code>为true</p>
+</li>
+<li><p>domList</p>
+<p><code>var dom = $(&#39;li&#39;)</code> 或者 <code>var dom = document.getElementsByTagName(&#39;li&#39;);</code></p>
+<p>这不是标准的数组，<strong>不</strong>拥有Array.prototype的属性。不能使用<code>forEach</code>和原生的<code>map</code>。</p>
+<p>其实它有个名字叫<strong>伪数组</strong>（像数组一样有 <code>length</code> 属性，且使用0，1，2这种索引可以获取对象），常见的参数的参数 arguments，DOM 对象列表</p>
+<p>权威指南上判断是维数组的代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">isArrayLike</span>(<span class="params">o</span>) </span>&#123;   </div><div class="line">    <span class="keyword">if</span> (o &amp;&amp;                                <span class="comment">// o is not null, undefined, etc.</span></div><div class="line">            <span class="keyword">typeof</span> o === <span class="string">'object'</span> &amp;&amp;            <span class="comment">// o is an object</span></div><div class="line">            <span class="built_in">isFinite</span>(o.length) &amp;&amp;               <span class="comment">// o.length is a finite number</span></div><div class="line">            o.length &gt;= <span class="number">0</span> &amp;&amp;                    <span class="comment">// o.length is non-negative</span></div><div class="line">            o.length===<span class="built_in">Math</span>.floor(o.length) &amp;&amp;  <span class="comment">// o.length is an integer</span></div><div class="line">            o.length &lt; <span class="number">4294967296</span>)              <span class="comment">// o.length &lt; 2^32</span></div><div class="line">            <span class="keyword">return</span> <span class="literal">true</span>;                        <span class="comment">// Then o is array-like</span></div><div class="line">    <span class="keyword">else</span></div><div class="line">            <span class="keyword">return</span> <span class="literal">false</span>;                       <span class="comment">// Otherwise it is not</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>objWithProto</p>
+<p>带有原型的。 没有length属性，不能使用<code>for(i){}</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> objWithProto =  &#123;</div><div class="line">        <span class="attr">name</span>: <span class="string">'cc'</span>,</div><div class="line">        <span class="attr">age</span>: <span class="number">24</span>,</div><div class="line">        <span class="attr">info</span>: &#123;</div><div class="line">            <span class="attr">title</span>: <span class="string">'happybangs'</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">objWithProto.__Proto__.protoName = <span class="string">'protoValue'</span>;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li><p>对于使用jquery的情况</p>
+<p>array和dom遍历用<code>each</code>。object可以使用<code>each</code>，但是要注意排除原型。三者需要拼凑返回值时用<code>map</code>.</p>
+<p> <code>if (array.hasOwnProperty(key)) {// 处理代码 }</code></p>
+</li>
+<li><p>对于原生ES5的情况</p>
+<ul>
+<li>array使用<code>forEach</code>(不能跳出循环)</li>
+<li><p>dom遍历使用<code>for(i)</code>, 或者</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[].forEach.call(divs, <span class="function"><span class="keyword">function</span>(<span class="params">div</span>) </span>&#123;</div><div class="line"> div.style.color = <span class="string">"red"</span>;</div><div class="line"> &#125;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>对象使用<code>for..in</code>（记得排除原型）   </p>
+</li>
+</ul>
+</li>
+<li><p>对于可以原生ES6的情况<br>array和dom使用 <code>for(const obj of array) {}</code>,</p>
+<p>遍历对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Object.keys(obj)返回["name", "age", "info"]</span></div><div class="line"><span class="keyword">for</span>(<span class="keyword">const</span> key <span class="keyword">of</span> <span class="built_in">Object</span>.keys(objWithProto)) &#123;</div><div class="line">    <span class="built_in">console</span>.log(objWithProto[key]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;几种循环方式对比&quot;&gt;&lt;a href=&quot;#几种循环方式对比&quot; class=&quot;headerlink&quot; title=&quot;几种循环方式对比&quot;&gt;&lt;/a&gt;几种循环方式对比&lt;/h4&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;名称&lt;/th&gt;
+&lt;th&gt;简介&lt;/th&gt;
+&lt;th&gt;
+    
+    </summary>
+    
+      <category term="jsBasic" scheme="http://blog.xiqian.me/categories/jsBasic/"/>
+    
+    
+      <category term="js" scheme="http://blog.xiqian.me/tags/js/"/>
+    
+      <category term="for" scheme="http://blog.xiqian.me/tags/for/"/>
+    
+      <category term="for in" scheme="http://blog.xiqian.me/tags/for-in/"/>
+    
+      <category term="for of" scheme="http://blog.xiqian.me/tags/for-of/"/>
+    
+      <category term="foreach" scheme="http://blog.xiqian.me/tags/foreach/"/>
+    
+      <category term="map" scheme="http://blog.xiqian.me/tags/map/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Flex布局原理介绍</title>
+    <link href="http://blog.xiqian.me/css/Intro-of-flex-principle.html"/>
+    <id>http://blog.xiqian.me/css/Intro-of-flex-principle.html</id>
+    <published>2017-01-02T21:31:26.000Z</published>
+    <updated>2017-02-03T12:33:26.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>CSS3中的 Flexible Box，或者叫flexbox，是用于排列元素的一种布局模式。</p>
+<p>顾名思义，弹性布局中的元素是有伸展和收缩自身的能力的。 相比于原来的布局方式，如float、position，根据盒子模型，就可以计算出元素的展示尺寸（长宽非百分比），除非溢出，否则不依赖于父容器的大小。</p>
+<p>而弹性布局中元素的大小是高度依赖父容器的大小的。因为，<strong>它所具有的“伸缩性”，目标就是为了撑满父元素。</strong>当然这是在任其“野蛮生长”的情况下，你也可以通过相关css属性控制其是否撑满、撑满什么轴。</p>
+<p>弹性布局是一种全新的思维方式，让很多实现复杂的问题有了更好的理解方式（如垂直居中）。只需要给<strong>直接</strong>父容器设置为<code>display: flex;</code> ，duang~ 子元素就默认具有了<strong>可收缩性</strong>。<br>Flex的语法规范也曾经有很多版本：  </p>
+<ul>
+<li>最新版本是<code>display: flex;</code></li>
+<li>中间版本是<code>display: flexbox</code>;</li>
+<li>最老版本<code>display: box</code>;</li>
+</ul>
+<p>本篇文章侧重于flex难理解的点，适合于已经了解过<a href="http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html?utm_source=tuicool" target="_blank" rel="external">flex的api</a>的童鞋观看。（api其实就下图这么多，橙色是常用的）</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a493540fa5ba58ce63a43bc84e13a2cd.png" alt="screenshot.png"></p>
+<h4 id="为何要引入主轴、交叉轴、轴线的概念"><a href="#为何要引入主轴、交叉轴、轴线的概念" class="headerlink" title="为何要引入主轴、交叉轴、轴线的概念"></a>为何要引入主轴、交叉轴、轴线的概念</h4><p>我们首先看一下，CSS布局的发展历程：</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a7081844485fdb0e22010e6f7143895a.png" alt="screenshot.png"></p>
+<p>最开始使用的布局方式是table布局。还记得我在2010年大一的时候，使用的就是这种布局，那时候div+css还没有成为主流，至少还没覆盖到我的学校。</p>
+<p>table布局的特点是非常好理解和上手，用过excel的都知道怎么组织代码：将网页划分为一个大的表格，将元素一个个填到表格中，如果表格不够大就合并单元格。但是这种布局的缺点是过于规整，只能适用于简单、规整的网页。且网站的布局严重依赖于html，很多冗余的布局html代码。</p>
+<p>到了2011年大二，我换了一个校区，也换了个地方做网页，部门负责人跟我说：“现在大家都用div+css了，来给你上堂课。”<br>我心里一懵，就这么不小心经历了“历史的变迁”。入门难了，新增了相对定位和绝对定位的概念，但是却能够应付复杂一点的网页了。</p>
+<p>接着因为“文字环绕”的需求，出现了浮动（float）布局。虽然有很多副作用，但是人们更喜欢它的价值，如今使用的频率也很高，比如bootstrap的栅格系统。</p>
+<p>CSS3新增了Flexbox。虽然前几种布局也可以实现垂直居中、等分、栅格等需求，但是往往需要脑袋转好几个弯，最后也不一定可行。而flex则使用了更直接明了的思路来实现这些布局。</p>
+<p>总的来说，虽然布局方式变多了，<strong>但并不是前者取代后者</strong>。直到现在，考虑到浏览器兼容性等问题，一种布局都有自己独一无二的使用价值。</p>
+<p>言归正传，翻开flex的入门教程，首先映入眼帘且比较难懂的就是主轴和交叉轴（对，就是下面这张图），这是前几种布局方式都没有的。</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/d15ca4443cf1f99ad2b961c3de58dcc4.png" alt="screenshot.png"></p>
+<p>前几种布局都可以按照人类书写的方式理解：“从左到右写，写不下就往下换行”。</p>
+<p>但是flex特点是可以重新定义这种“书写方式”，你还可以从下到上写、从右到左写（见flex-direction属性），换行也可以从两个相反的方向换行（见flex-wrap属性）。所以引入了这个几个概念方便理解。</p>
+<p>如果你只是简单的使用，其实只用得到默认值，个人认为可以不用过于深究主轴和交叉轴。</p>
+<p>那么，到底这些轴的概念怎么就帮助我们理解了？</p>
+<p>首先你可以先去温习一下<a href="http://codepen.io/enxaneta/full/adLPwv/" target="_blank" rel="external">flex的api</a>。</p>
+<p>为了帮助理解，以类比的方式类比人类书写的方式，浏览器“书写”的方向为主轴方向，浏览器“换行的方向”为交叉轴方向，每行就是一条轴线。</p>
+<p>更正式一点的说法是，浏览器的布局方式是：</p>
+<p><strong>沿着主轴的方向依次排列，如果要换行，则沿着交叉轴的方向进行换行，每行代表一条轴线。</strong></p>
+<p>细心的同学应该发现了，“依次”其实也不是“依次”，我们可以使用子元素的order属性对元素进行重新排序。由此可见，flex给子元素提供了很大的灵活性，但本篇文章只使用order的默认值。</p>
+<p>主轴、交叉轴可以帮助我们理解这些概念：</p>
+<ul>
+<li><p>重新定义浏览器“书写方式”。</p>
+<p> <code>flex-direction</code> 改变主轴方向；</p>
+<p> <code>flex-wrap</code> 改变交叉轴方向</p>
+<p> 如下图，主轴和交叉轴的排列组合有4*2 =8 种。</p>
+<p> <img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/239feda71c5e515840a570c26c012c2b.png" alt="screenshot.png"></p>
+<p> 比如，可以像写对联一样，从上到下竖着书写，从右到左换行。</p>
+<p> （2017新年快乐~）</p>
+<p> <img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/c8a2a5bf0b0a5192cc1571f2179a4f53.png" alt="Bitmap.png"></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.container</span> &#123;</div><div class="line">  <span class="attribute">flex-direction</span>: column;</div><div class="line">  <span class="attribute">flex-wrap</span>: wrap-reverse;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 为了方便表达，本篇文章都使用默认的轴方向。</p>
+</li>
+<li><p>轴上的元素的排列方式(justify-content, align-items)。  </p>
+<ul>
+<li>justify-content 定义了元素在主轴轴上如何对齐；   </li>
+<li>align-items 定义了元素在交叉轴上如何对齐。   </li>
+</ul>
+<p>因为轴都有方向，因此也有轴起点和轴终点：  </p>
+<ul>
+<li>flex-start: 对齐轴起点;    </li>
+<li>flex-end: 对齐轴终点;  </li>
+<li>center：在轴线上居中;  </li>
+<li>space-between：两端不带间距的轴线两端对齐;  </li>
+<li>space-around: 两端带间距的轴线两端对齐, 且每个子元素之间的间距相同（假设为x）。两端元素离父元素间距为（x/2）。 <strong>注意这个间距既不是margin也不是padding，盒子模型来计算展示方式已经不适用了。</strong>  </li>
+<li>baseline：交叉轴特有，基线对齐。   </li>
+<li>stretch：交叉轴特有，有占满整个主轴高度的意向。当设置了子元素高度为非auto时不生效。 </li>
+</ul>
+</li>
+<li><p>多根轴线时，轴线之间的排列方式(align-content)。<br>align-content的参照轴是交叉轴。其属性也和上面的justify-content、align-items大同小异：flex-start、flex-end、center、space-between、space-around、stretch。不多做解释。</p>
+</li>
+</ul>
+<h3 id="元素宽度如何伸缩"><a href="#元素宽度如何伸缩" class="headerlink" title="元素宽度如何伸缩"></a>元素宽度如何伸缩</h3><p>能决定元素展示宽度的属性有：<code>flex-shrink，flex-grow，flex-basis，width，min-width</code></p>
+<p>因为flex为前三个属性的缩写方式，所以常用写法是<code>flex-shrink，flex-grow，flex-basis</code>统一用<code>flex</code>设置。</p>
+<p>常见的flex设置：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>样式</th>
+<th>flex-grow</th>
+<th>flex-shrink</th>
+<th>flex-basis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①</td>
+<td>flex默认值</td>
+<td>0</td>
+<td>1</td>
+<td>auto</td>
+</tr>
+<tr>
+<td>②</td>
+<td>flex: 1;</td>
+<td>1</td>
+<td>1</td>
+<td>0%</td>
+</tr>
+<tr>
+<td>③</td>
+<td>flex: auto;</td>
+<td>1</td>
+<td>1</td>
+<td>auto</td>
+</tr>
+<tr>
+<td>④</td>
+<td>flex: none;</td>
+<td>0</td>
+<td>0</td>
+<td>auto</td>
+</tr>
+</tbody>
+</table>
+<p>那么，flex-grow和flex-shrink的值会对元素造成什么影响呢？</p>
+<p>如下图所示，当元素允许缩小时，最终展示的效果会是正好撑满主轴。</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/b7150d5b04ac74a7f26ad44e9c5d6cd8.png" alt="screenshot.png"></p>
+<p>在父容器中有三个元素A1,A2,A3,他们都有一个<strong>初始宽度</strong>（比如设置了width且flex-basis不为0%）。初始宽度在下一小节会详细讲。</p>
+<p>如果按照初始宽度放入普通父容器中，那么他们会溢出<strong>x</strong>个像素（见初始尺寸行）。</p>
+<p>当父元素<code>display: flex;</code>， </p>
+<p>且A1<code>flex-shrink:1</code>，A2<code>flex-shrink:1</code>，A3<code>flex-shrink:1</code>时，</p>
+<p>A1、A2、A3都具有可收缩的特性。</p>
+<p>flex-shrink的值表示需要收缩的宽度占总溢出宽度的比例，因此展示尺寸这么算：</p>
+<ol>
+<li><p>将x平均分为(1+1+2) = 4份，每份宽度为<strong>i = x/4</strong></p>
+</li>
+<li><p>A1的展示尺寸为：A1默认宽度 - i × 1；</p>
+<p>A2的展示尺寸为：A1默认宽度 - i × 1；</p>
+<p>A3的展示尺寸为：A1默认宽度 - i × 2；</p>
+</li>
+</ol>
+<p>还是很好理解的吧。同理，当元素不够撑满父元素时，需要伸展的宽度也是按照这种方式计算的。只是比例基数变成了剩余空间的宽度。</p>
+<p>如果你希望元素不能伸缩，那么需要设置相应的属性为0。</p>
+<p>如: <code>flex-shrink: 0</code>。</p>
+<h3 id="flex-basis和width的关系"><a href="#flex-basis和width的关系" class="headerlink" title="flex-basis和width的关系"></a>flex-basis和width的关系</h3><p>flex-basis 用于计算上一小节中元素的“初始宽度”。</p>
+<ul>
+<li>flex-basis为auto时, 初始宽度为元素内容大小或者设置的宽度值（盒子模型中的占用宽度）。</li>
+<li>flex-basis为像素值时，初始宽度为flex-basis的值。</li>
+<li>flex-basis为百分比时，初始宽度为占父容器的比例。</li>
+<li>flex-basis为0或0%时，初始宽度为0。</li>
+</ul>
+<p>虽然flex-basis的优先级大于width，但是<strong>最后计算的展示尺寸受限于min-width或者max-width</strong>。</p>
+<p>比如，元素A算出来的展示宽度为100px，但是它有个css属性<code>min-width: 200px;</code>, 那么最后的展示宽度仍然为200px。但是计算的初始尺寸仍然是由flex-basis决定。  </p>
+<h3 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h3><p>从<a href="http://caniuse.com/#search=flex%20box" target="_blank" rel="external">caniuse</a>上可以查到，通过加上各种前缀，flex可以兼容到ie10以及以上。</p>
+<p>16年年初在实际使用过程中，发现UC的支持性很不好。这次又重新试了一次，新版的UC也能很好的支持flex了。看来flex正在慢慢占领移动端。</p>
+<h3 id="几个案例"><a href="#几个案例" class="headerlink" title="几个案例"></a>几个案例</h3><p>通过上面几小节的描述，可以发现flex用了一种全新的思路来布局。<br>列出几个常见的案例，以下案例的代码统一在<a href="http://codepen.io/cheer/pen/dOmpXv" target="_blank" rel="external">我的codepen</a>可查看。</p>
+<p>① 垂直居中<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/e03f10a5f35fe203fb877eaa4b33b993.png" alt="screenshot.png"><br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.container</span> &#123;</div><div class="line">    <span class="attribute">display</span>: inline-flex;</div><div class="line">    <span class="attribute">align-items</span>: center;</div><div class="line">    <span class="attribute">justify-content</span>: center;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>② 一侧固定，一侧自适应<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/157c8233a8290a330e20900974a8c92c.png" alt="screenshot.png"><br><figure class="highlight scss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.container</span> &#123;</div><div class="line">    <span class="attribute">display</span>: flex;</div><div class="line">    <span class="selector-class">.sidebar</span> &#123;</div><div class="line">        <span class="attribute">width</span>: <span class="number">100px</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="selector-class">.content</span> &#123;</div><div class="line">        <span class="attribute">flex</span>: <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>③ 多列等高<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/8bc2041ba11386c873fe8f401a56244b.png" alt="screenshot.png"><br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.container</span> &#123;</div><div class="line">    <span class="attribute">display</span>: flex;</div><div class="line">    <span class="attribute">flex-wrap</span>: wrap;</div><div class="line">    <span class="attribute">justify-content</span>: space-between;</div><div class="line">    <span class="attribute">align-content</span>: stretch;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>flex布局是围绕父元素和轴来进行布局的。这种全新的思路巧妙地只需要简单几行代码就可以实现曾经头疼的效果，其思路的建立过程非常值得借鉴。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h3&gt;&lt;p&gt;CSS3中的 Flexible Box，或者叫flexbox，是用于排列元素的一种布局模式。&lt;/p&gt;
+&lt;p&gt;顾名思义，弹性布局中的元素是有伸
+    
+    </summary>
+    
+      <category term="样式" scheme="http://blog.xiqian.me/categories/css/"/>
+    
+    
+      <category term="css_basic" scheme="http://blog.xiqian.me/tags/css-basic/"/>
+    
+      <category term="flex" scheme="http://blog.xiqian.me/tags/flex/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>BEM</title>
+    <link href="http://blog.xiqian.me/css/Intro-of-BEM.html"/>
+    <id>http://blog.xiqian.me/css/Intro-of-BEM.html</id>
+    <published>2016-08-30T04:17:00.000Z</published>
+    <updated>2017-02-12T12:14:06.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>众所周知，统一的命名规范可以显著的提高开发速度，然而现在大多数项目中的css的代码，都不会约定命名规范来开发，这导致随着时间的增长，css代码越来越不可维护。  </p>
+<p>BEM是Yandex团队提出的，通过一种严格方式来将 CSS Class划分成独立构成要素的一种命名方法。</p>
+<blockquote>
+<p>BEM is a highly useful, powerful and simple naming convention to make your front-end code easier to read and understand, easier to work with, easier to scale, more robust and explicit and a lot more strict.</p>
+</blockquote>
+<p>BEM是Block，Element，Modifier的缩写。它的命名规则就是由这三部分组成。</p>
+<ul>
+<li>Block：块，独立的模块。如header，container，menu，checkbox，input。block可以相互嵌套，一个header是block,header里嵌套的搜索框是block,甚至一个icon一个logo也是block。</li>
+<li>Element：元素，block的一部分，不独立，是依赖于block的。  如 menu item,list item,header title。</li>
+<li>Modifier: 修饰符，表示block或者element的状态，使用它来改变元素或者块的外观或者行为。例如 disabled,checked,active等。  </li>
+</ul>
+<p>官方示例中，块和元素之间使用 <strong> 分隔，元素/块和装饰符之间使用 – 分隔，比较长的名称使用-分隔。例如：simple-form</strong>submit–disabled(简单表单中禁用状态的提交按钮)。 但实际使用中可以自行定义间隔符类型。</p>
+<p>一个前端页面，利用今天介绍的思想，可以转换为一个块和元素相互嵌套的对象模型，这种结构叫做 <strong>BEM树</strong>。  </p>
+<p>例如，一个网站的菜单项，用BEM的方法分析网站的结构得到(json)：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  block: 'menu',</div><div class="line">  content: [</div><div class="line">    &#123; </div><div class="line">        elem: 'item', </div><div class="line">        content: 'Index' </div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      elem: 'item',</div><div class="line">      mods: &#123; 'state' : 'current' &#125;,</div><div class="line">      content: 'Products'</div><div class="line">    &#125;,</div><div class="line">    &#123; </div><div class="line">        elem: 'item', </div><div class="line">        content: 'Contact' </div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>转换为html代码：</p>
+<pre><code class="html"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"menu"</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu__item"</span>&gt;</span>Index<span class="tag">&lt;/<span class="name">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu__item menu__item_state_current"</span>&gt;</span>Products<span class="tag">&lt;/<span class="name">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"menu__item"</span>&gt;</span>Contact<span class="tag">&lt;/<span class="name">li</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">ul</span>&gt;</span>
+</code></pre>
+<p>优点：  </p>
+<ul>
+<li>模块化。block(块)不会依赖页面中任何其他元素。</li>
+<li>复用性强。名字很长，冲突都难。</li>
+<li>结构清晰，易读。因为命名有一定的规则，所以会很容易的找到块所在的位置，元素的含义以及修饰符如何使用。</li>
+<li>其他：基本不需要嵌套,层级少了，css性能提升了。</li>
+</ul>
+<p>缺点：命名复杂，长度长。但可以使用Mixins自动生成名字（然而编写的时候还是很麻烦，很多人也是因为这个望而却步）。</p>
+<p>虽然不会将BEM使用到项目中，但是BEM的设计思想还是很值得学习的。</p>
+<p>使用BEM的网站：<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/7fcc9e9747b03d1d74fa8069ca2453a1" alt="screenshot"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;众所周知，统一的命名规范可以显著的提高开发速度，然而现在大多数项目中的css的代码，都不会约定命名规范来开发，这导致随着时间的增长，css代码越来越不可维护。  &lt;/p&gt;
+&lt;p&gt;BEM是Yandex团队提出的，通过一种严格方式来将 CSS Class划分成独立构成要素的一种
+    
+    </summary>
+    
+      <category term="样式" scheme="http://blog.xiqian.me/categories/css/"/>
+    
+    
+      <category term="css规范" scheme="http://blog.xiqian.me/tags/css%E8%A7%84%E8%8C%83/"/>
+    
+      <category term="css_basic" scheme="http://blog.xiqian.me/tags/css-basic/"/>
+    
+  </entry>
+  
+</feed>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+  <url>
+    <loc>http://blog.xiqian.me/jsBasic/How_To_Inherit_In_JavaScript.html</loc>
+    <lastmod>2017-03-20T11:41:07.000Z</lastmod>
+    <data>
+        <display>
+        <title>再看JS中的继承</title>
+        <pubTime>2017-03-20T11:18:54.000Z</pubTime>
+        
+        <tag>原型</tag>
+         
+        <tag>webpack</tag>
+         
+        <tag>原型链</tag>
+         
+        <tag>继承</tag>
+         
+        <tag>inherit</tag>
+         
+         
+           
+             
+              <breadCrumb title="jsBasic" url="http://blog.xiqian.me/categories/jsBasic/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiqian.me/jsBasic/Javascript_Object_Attributes_Of_JavaScript.html</loc>
+    <lastmod>2017-03-20T11:40:54.000Z</lastmod>
+    <data>
+        <display>
+        <title>JS对象属性的特征</title>
+        <pubTime>2017-03-20T11:14:58.000Z</pubTime>
+        
+        <tag>Configuable</tag>
+         
+        <tag>Enumerable</tag>
+         
+        <tag>Writable</tag>
+         
+        <tag>Get</tag>
+         
+        <tag>Set</tag>
+         
+         
+           
+             
+              <breadCrumb title="jsBasic" url="http://blog.xiqian.me/categories/jsBasic/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiqian.me/jsBasic/How_To_Create_Object_In_JavaScript.html</loc>
+    <lastmod>2017-03-20T11:40:44.000Z</lastmod>
+    <data>
+        <display>
+        <title>JS创建对象的几种方式</title>
+        <pubTime>2017-03-20T11:17:40.000Z</pubTime>
+        
+        <tag>constructor，prototype</tag>
+         
+        <tag>原型</tag>
+         
+         
+           
+             
+              <breadCrumb title="jsBasic" url="http://blog.xiqian.me/categories/jsBasic/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiqian.me/readingNotes/book-of-you-dont-know-js-1.html</loc>
+    <lastmod>2017-03-16T01:56:50.000Z</lastmod>
+    <data>
+        <display>
+        <title>读书笔记：你不知道的js - 第一章,第二章</title>
+        <pubTime>2017-02-19T04:37:38.000Z</pubTime>
+        
+        <tag>你不知道的js</tag>
+         
+         
+           
+             
+              <breadCrumb title="readingNotes" url="http://blog.xiqian.me/categories/readingNotes/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiqian.me/css/Intro-of-BEM.html</loc>
+    <lastmod>2017-02-12T12:14:06.000Z</lastmod>
+    <data>
+        <display>
+        <title>BEM</title>
+        <pubTime>2016-08-30T04:17:00.000Z</pubTime>
+        
+        <tag>css规范</tag>
+         
+        <tag>css_basic</tag>
+         
+         
+           
+             
+              <breadCrumb title="样式" url="http://blog.xiqian.me/categories/css/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiqian.me/jsBasic/Ways-of-loop-in-javascript.html</loc>
+    <lastmod>2017-02-12T12:12:32.000Z</lastmod>
+    <data>
+        <display>
+        <title>js中的几种遍历方式</title>
+        <pubTime>2017-02-12T08:54:40.000Z</pubTime>
+        
+        <tag>js</tag>
+         
+        <tag>for</tag>
+         
+        <tag>for in</tag>
+         
+        <tag>for of</tag>
+         
+        <tag>foreach</tag>
+         
+        <tag>map</tag>
+         
+         
+           
+             
+              <breadCrumb title="jsBasic" url="http://blog.xiqian.me/categories/jsBasic/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+    
+    
+  <url>
+    <loc>http://blog.xiqian.me/css/Intro-of-flex-principle.html</loc>
+    <lastmod>2017-02-03T12:33:26.000Z</lastmod>
+    <data>
+        <display>
+        <title>Flex布局原理介绍</title>
+        <pubTime>2017-01-02T21:31:26.000Z</pubTime>
+        
+        <tag>css_basic</tag>
+         
+        <tag>flex</tag>
+         
+         
+           
+             
+              <breadCrumb title="样式" url="http://blog.xiqian.me/categories/css/"/>
+          
+        </display>
+    </data>
+    </url>
+
+</urlset>

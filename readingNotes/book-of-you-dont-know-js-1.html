@@ -1,0 +1,287 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="happyBangs"><meta name="baidu-site-verification" content="WOn1sDwJYq"><title>读书笔记：你不知道的js - 第一章,第二章 | HappyBang's Blog</title><meta name="description" content="你不知道的js 下部(1) 读书笔记，第一章 类型，js基本类型，typeof, 假值"><meta name="keywords" content="js基本类型，typeof, 假值"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="toc-wrapper"><div class="toc-btn"></div><div class="toc-menu"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第一章-类型"><span class="toc-text">第一章 类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-undefined-和-undeclared"><span class="toc-text">1. undefined 和 undeclared</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-typeof"><span class="toc-text">2. typeof</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-js中奇葩的假值"><span class="toc-text">3. js中奇葩的假值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二章-值"><span class="toc-text">第二章 值</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-数组"><span class="toc-text">1. 数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-字符串"><span class="toc-text">2. 字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-数字"><span class="toc-text">3. 数字</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-“整数“"><span class="toc-text">3.1 “整数“</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-特殊的数字"><span class="toc-text">3.2 特殊的数字</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#附：数字相关的函数"><span class="toc-text">附：数字相关的函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#顺带笔记的"><span class="toc-text">顺带笔记的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#英文术语"><span class="toc-text">英文术语</span></a></li></ol></li></ol></div></div><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.jpg" class="sidebar-img"><h3 title=""><a href="/">HappyBangs</a></h3><div class="description"><p>更无畏，更有想法。</p></div></div></div><ul class="social-links"><li><a href="/atom.xml"><i class="fa fa-rss"></i></a></li></ul><div class="footer"><span>Theme Anatole </span><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Powered by Hexo</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">首页</a></li><li><a href="/about">关于</a></li><li><a href="/archives">归档</a></li><li><a href="/links">友链</a></li><li><a href="/tags">标签</a></li></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h1><a>读书笔记：你不知道的js - 第一章,第二章</a></h1></div><div class="post-content"><h2 id="第一章-类型"><a href="#第一章-类型" class="headerlink" title="第一章 类型"></a>第一章 类型</h2><h3 id="1-undefined-和-undeclared"><a href="#1-undefined-和-undeclared" class="headerlink" title="1. undefined 和 undeclared"></a>1. undefined 和 undeclared</h3><ul>
+<li><p>undefined（未定义）<br> 已经在作用域中声明了，但是没定义/赋值。</p>
+</li>
+<li><p>undeclared（未声明）<br> 还没有在作用域中声明过的变量。<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/48d518000866fa0583a646b69136aee1" alt="screenshot"></p>
+</li>
+<li><p>关系</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">type <span class="keyword">of</span> undeclared === <span class="string">'undefined'</span>;<span class="comment">// true</span></div></pre></td></tr></table></figure>
+<p>注意： 正常使用了未声明的变量会报错，但是typeof有特殊的<strong>安全防护机制</strong>，并不会在控制台报错 。</p>
+</li>
+</ul>
+<h3 id="2-typeof"><a href="#2-typeof" class="headerlink" title="2. typeof"></a>2. typeof</h3><ul>
+<li><p>typeof的参数为什么不用括号括起来？因为它是个<strong>操作符</strong>，不是函数。</p>
+</li>
+<li><p>在对变量执行typeof操作是，得到的不是该变量的类型，而是该变量持有的值的类型，==<strong>因为js中的变量没有类型</strong>==。</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/93a8d1b32d8bba3301c31c030d56ee70" alt="_1"></p>
+</li>
+<li><p>typeof 的返回值为string, 小写。而其实基本数据类型的构造函数是首字母大写的(String)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typeof</span> <span class="keyword">typeof</span> <span class="number">1</span>;<span class="comment">// "string"</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>用途</p>
+<ul>
+<li><p>若要用typeof，则只能使用<strong>复合条件</strong>来检测是否为null值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="literal">null</span>;</div><div class="line"><span class="keyword">if</span>(!a &amp;&amp; <span class="keyword">typeof</span> a ===<span class="string">"object"</span>)&#123;&#125;; <span class="comment">//true</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>“如何在程序中检查全局变量或者局部变量才不会出现ReferenceError错误？”  </p>
+<ul>
+<li><p>错误：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(b)&#123;&#125;; <span class="comment">// 抛出undeclared异常</span></div></pre></td></tr></table></figure>
+<p> 但如果b是一个函数的参数，那不会抛异常，而且可以这么用。</p>
+</li>
+<li><p>正确：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(<span class="keyword">typeof</span> b=== <span class="string">'undefined'</span>)&#123;&#125;; <span class="comment">// true表示不存在</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>全局变量还可带window来查询，不会抛出referenceerror错误。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(<span class="built_in">window</span>.b)&#123;&#125;; <span class="comment">// true表示存在</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-js中奇葩的假值"><a href="#3-js中奇葩的假值" class="headerlink" title="3. js中奇葩的假值"></a>3. js中奇葩的假值</h3><p>即强制转换为布尔值，返回false的。</p>
+<ul>
+<li>false</li>
+<li>null</li>
+<li>undefined</li>
+<li>空字符串</li>
+<li>NAN</li>
+<li>0</li>
+<li>其他值均为真</li>
+</ul>
+<p>注意: 负数也是返回true的</p>
+<h2 id="第二章-值"><a href="#第二章-值" class="headerlink" title="第二章 值"></a>第二章 值</h2><p>概要：数组、字符串、数字</p>
+<h3 id="1-数组"><a href="#1-数组" class="headerlink" title="1. 数组"></a>1. 数组</h3><ul>
+<li><p>特点：js中的数组为动态大小，可以塞入任何类型的值。</p>
+</li>
+<li><p>声明</p>
+<ul>
+<li>var a=[];</li>
+<li>var a=[1,2,3];</li>
+<li>var a = new Array(3);// 3为数组长度</li>
+<li>var a = Array(3);// 同上</li>
+</ul>
+</li>
+<li><p>稀疏数组：至少包含一个“空单元”的数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [];</div><div class="line">a.length = <span class="number">4</span>; <span class="comment">//  创建一个长度为4的空数组</span></div><div class="line"><span class="built_in">console</span>.info(a); <span class="comment">// []</span></div><div class="line">a[<span class="number">3</span>] = <span class="number">1</span>;</div><div class="line"><span class="built_in">console</span>.info(<span class="number">1</span>);<span class="comment">// [undefined × 2, 1, undefined × 1]</span></div></pre></td></tr></table></figure>
+<p>注意：稀疏数组中的空缺单元和直接赋值元素为undefined是不一样的。  </p>
+<p>​<br>然而书上也没有说仔细。我理解是空缺单元只是总长度加1，并没有申请变量空间。而undefined类似变量已经声明为赋值，是实实在在存在的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">3</span>);</div><div class="line"><span class="keyword">var</span> b = [<span class="literal">undefined</span>, <span class="literal">undefined</span>, <span class="literal">undefined</span>];</div><div class="line"><span class="keyword">var</span> c = [];</div><div class="line">c.length = <span class="number">3</span>;</div></pre></td></tr></table></figure>
+<p>Output:<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/8bb71726e8e5f42bb90f53a6c249b0ee" alt="screenshot">    </p>
+</li>
+<li><p>类数组</p>
+<ul>
+<li><p>定义</p>
+<ul>
+<li>拥有length属性。</li>
+<li>不具有数组所具有的方法。不是数组的定义方式初始化的（Array()或者[]）</li>
+</ul>
+</li>
+<li><p>实例</p>
+<ol>
+<li>DOM查询操作会返回DOM元素列表<code>document.getElementsByTagName()</code></li>
+<li>函数的arguments对象（参数列表）（ES6开始已废止）<br><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a6d619fc8be0dc9034ca34dfddbd9220" alt="screenshot"></li>
+</ol>
+</li>
+<li><p>判断类数组的方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">function</span> <span class="title">isArrayLike</span>(<span class="params">o</span>) </span>&#123;</div><div class="line"><span class="keyword">if</span> (o &amp;&amp;                                <span class="comment">// o is not null, undefined, etc.</span></div><div class="line">   <span class="keyword">typeof</span> o === <span class="string">'object'</span> &amp;&amp;            <span class="comment">// o is an object</span></div><div class="line">   <span class="built_in">isFinite</span>(o.length) &amp;&amp;               <span class="comment">// o.length is a finite number不是无穷大且不是数字</span></div><div class="line">   o.length &gt;= <span class="number">0</span> &amp;&amp;                    <span class="comment">// o.length is non-negative</span></div><div class="line">   o.length===<span class="built_in">Math</span>.floor(o.length) &amp;&amp;  <span class="comment">// o.length is an integer</span></div><div class="line">   o.length &lt; <span class="number">4294967296</span>)              <span class="comment">// o.length &lt; 2^32</span></div><div class="line">   <span class="keyword">return</span> <span class="literal">true</span>;                        <span class="comment">// Then o is array-like</span></div><div class="line"><span class="keyword">else</span></div><div class="line">   <span class="keyword">return</span> <span class="literal">false</span>;                       <span class="comment">// Otherwise it is not</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>类数组转化为数组</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>);<span class="comment">// ES5，slice() 方法会浅复制（shallow copy）数组的一部分到一个新的数组，并返回这个新数组</span></div><div class="line"><span class="keyword">var</span> arr = <span class="built_in">Array</span>.from(<span class="built_in">arguments</span>);<span class="comment">// ES6</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>奇葩的用法</p>
+<ul>
+<li><p>数组也是对象，可以有对象的属性。比如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line">a.name =<span class="string">"数组"</span>;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>当数组的下标是字符串，但是能转成字符串时，依然算作数组的元素。否则算作对象的属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [];</div><div class="line">a[<span class="string">"4"</span>] = <span class="number">6</span>; <span class="comment">// 数组的元素</span></div><div class="line">a.length; <span class="comment">// 5</span></div><div class="line">a[<span class="string">'name'</span>] = <span class="string">'xq'</span>;<span class="comment">// 对象的属性</span></div><div class="line">a.length;<span class="comment">// 5</span></div><div class="line">a.name;<span class="comment">// 'xq'</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-字符串"><a href="#2-字符串" class="headerlink" title="2. 字符串"></a>2. 字符串</h3><ul>
+<li><p>定义：一组由16位值组成的不可变的有序序列。</p>
+</li>
+<li><p>JS中字符串不是字符数组。虽然他们都是<strong><em>类数组</em></strong><br> “foo” 不等于[“f”,”o”,”o”]</p>
+</li>
+<li><p>js中字符串是不可变的，而数组是可变的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [<span class="string">'O'</span>,<span class="string">'C'</span>,<span class="string">'T'</span>];</div><div class="line"><span class="keyword">var</span> b = <span class="string">'OCT'</span>;</div><div class="line">a[<span class="number">0</span>] = <span class="string">'C'</span>;</div><div class="line">b[<span class="number">0</span>] = <span class="string">'C'</span>;</div><div class="line">a;<span class="comment">// ['A','C''T']</span></div><div class="line">b;<span class="comment">// 'OCT'</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>字符串拥有数组的不改变元素值的方法：indexOf(),concat(),但不拥有reverse()等会改变原本值的方法 。</p>
+</li>
+</ul>
+<h3 id="3-数字"><a href="#3-数字" class="headerlink" title="3. 数字"></a>3. 数字</h3><p>JavaScript只有一种数值类型： number，包括“整数”和带小数的十进制数。</p>
+<h4 id="3-1-“整数“"><a href="#3-1-“整数“" class="headerlink" title="3.1 “整数“"></a>3.1 “整数“</h4><blockquote>
+<p>JavaScript没有真正意义上的整数。</p>
+</blockquote>
+<p>javascript中的“整数”是”双精度浮点数“（java中的double），64位二进制。我们平时所称的”整数“只是没有小数位的浮点数。</p>
+<ul>
+<li><p>整数检测</p>
+<ul>
+<li><p>ES6</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Number</span>.isInteger(<span class="number">42.000</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>ES5</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typeof</span> param === <span class="string">"number"</span> &amp;&amp; num % <span class="number">1</span> == <span class="number">0</span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>进制表示法</p>
+<p>因为容易混淆，建议字母使用小写。</p>
+<p>二进制： 0b1010001 或者  0B1010001</p>
+<p>八进制： 0o363 或者 0O363 （注释：零+欧）</p>
+<p>十六进制:  0x33 或者 0X33</p>
+</li>
+<li><p><strong>精度丢失问题</strong></p>
+<p>javascript中的数据是双精度浮点类型的，可以得到它的数值范围，图列出大于0的情况：</p>
+<p> <img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/f85be36da748b0c4ce07ed164d419b68.png" alt="screenshot.png"></p>
+</li>
+<li><p>为什么最大浮点数那么大？</p>
+<p>比如，3位表示整数只能表示8个，而表示小数根据小数点的摆放位置，可以有8<em>4种。计算机里面的二进制数字分为固点数和浮点数，这个点就是值得小数点。</em></p>
+<p>​</p>
+</li>
+<li><p>也正因为它是浮点型的，导致存在精度丢失的问题。</p>
+<p>如图：</p>
+<p> <img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/cd370eb0bdceb89da1ffb79ffe68d84c.png" alt="screenshot.png"></p>
+<p>这是因为0.1和0.2转换为二进制，都是无限循环的二进制小数，计算机没有那么多位数给他们存。计算机会通过一定的算法对超出的位数进行截断，所以存在精度丢失的问题。</p>
+<p>还记得怎么把小数转换成二进制吧？以0.1为例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">(<span class="number">1</span>) <span class="number">0.1</span> x <span class="number">2</span> = <span class="number">0.2</span>  取整数位 <span class="number">0</span> 得 <span class="number">0.0</span></div><div class="line">(<span class="number">2</span>) <span class="number">0.2</span> x <span class="number">2</span> = <span class="number">0.4</span>  取整数位 <span class="number">0</span> 得 <span class="number">0.00</span></div><div class="line">(<span class="number">3</span>) <span class="number">0.4</span> x <span class="number">2</span> = <span class="number">0.8</span>  取整数位 <span class="number">0</span> 得 <span class="number">0.000</span></div><div class="line">(<span class="number">4</span>) <span class="number">0.8</span> x <span class="number">2</span> = <span class="number">1.6</span>  取整数位 <span class="number">1</span> 得 <span class="number">0.0001</span></div><div class="line">(<span class="number">5</span>) <span class="number">0.6</span> x <span class="number">2</span> = <span class="number">0.2</span>  取整数位 <span class="number">1</span> 得 <span class="number">0.00011</span></div><div class="line">(<span class="number">6</span>) <span class="number">0.2</span> x <span class="number">2</span> = <span class="number">0.4</span>  取整数位 <span class="number">0</span> 得 <span class="number">0.000110</span></div><div class="line">(<span class="number">7</span>) <span class="number">0.4</span> x <span class="number">2</span> = <span class="number">0.8</span>  取整数位 <span class="number">0</span> 得 <span class="number">0.0001100</span></div><div class="line">(<span class="number">8</span>) <span class="number">0.8</span> x <span class="number">2</span> = <span class="number">1.6</span>  取整数位 <span class="number">1</span> 得 <span class="number">0.00011001</span></div><div class="line">(<span class="number">9</span>) <span class="number">0.6</span> x <span class="number">2</span> = <span class="number">1.2</span>  取整数位 <span class="number">1</span> 得 <span class="number">0.000110011</span></div><div class="line">……</div></pre></td></tr></table></figure>
+<p>最终0.1转换为二进制为0.0001100110011……可以得出0.1，0.2，0.4，0.6，0.8 在二进制中都是无限循环的小数。因此0.1和0.2分别都有精度丢失，最终的计算结果难免不准确。</p>
+</li>
+<li><p>那么，怎样的两个数看做相等呢？</p>
+<p>由于精度丢失，导致违反了我们的认知，本来0.1+0.2 === 0.3 应该返回true的。那么，有没有一个标准判断两个相近的数可以看做是相等呢？</p>
+<p>javascript中有定义一个误差范围（ES6:Number.ESILON;ES5:2^-52）, 通常称为“机器精度”。</p>
+</li>
+</ul>
+<h4 id="3-2-特殊的数字"><a href="#3-2-特殊的数字" class="headerlink" title="3.2 特殊的数字"></a>3.2 特殊的数字</h4><ul>
+<li><p>NaN = not a number</p>
+<blockquote>
+<p> NaN是一个”警戒值”，即“执行数学运算没有成功，这是失败后返回的结果”</p>
+</blockquote>
+<p>如果数学运算的操作数不是数据类型（或无法转换成数据类型），整个运算就返回NaN。如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="number">2</span>/<span class="string">"c"</span>; <span class="comment">//last无法转换为数据类型, a = NaN</span></div><div class="line"><span class="keyword">var</span> a =<span class="number">2</span>/<span class="string">"1"</span>; <span class="comment">// 1可以转换为数据类型，a=2</span></div></pre></td></tr></table></figure>
+<ul>
+<li><strong>NaN仍然是数字类型</strong></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typeof</span> <span class="literal">NaN</span> === <span class="string">"number"</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<ul>
+<li><p>NaN是<strong>唯一一个非自反</strong>（x===x为false）的值</p>
+<p>可以理解为不是数字的原因有很多种，不能一概而论。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="literal">NaN</span> === <span class="literal">NaN</span>; <span class="comment">// false</span></div><div class="line"><span class="literal">NaN</span> == <span class="literal">NaN</span>; <span class="comment">// false</span></div><div class="line"><span class="literal">NaN</span> != <span class="literal">NaN</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<p>利用这个特点，可以检验当前变量是否是NaN（不是数字的数字）。（ES6中已经加了工具函数Number.isNaN(..),但ES5中没有好用的）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(!<span class="built_in">Number</span>.isNaN) &#123;</div><div class="line">  <span class="built_in">Number</span>.isNaN = <span class="function"><span class="keyword">function</span>(<span class="params">n</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> n!==n; <span class="comment">// 返回true的话就是NaN</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注：ES5中有一个工具函数window.isNaN(..)有严重bug，不要使用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.isNaN(<span class="string">"foo"</span>);<span class="comment">// 返回true</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>无穷数</p>
+<p>当数学运算结果溢出时，javascript并不会像其他语言一样抛异常，而是返回无穷数。例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="number">1</span>/<span class="number">0</span>; <span class="comment">// Infinity</span></div><div class="line"><span class="keyword">var</span> b = <span class="number">-1</span>/<span class="number">0</span>;<span class="comment">// -Infinity</span></div></pre></td></tr></table></figure>
+<p>如上所示，无穷数有负的无穷数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="literal">Infinity</span>/<span class="literal">Infinity</span> = <span class="literal">NaN</span>;<span class="comment">// 由于未定义该操作，所以返回NaN</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>零值</p>
+<p>分为常规0和-0。乘法和除法会得到负零，减法和加法不会。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span>/<span class="number">-3</span>; <span class="comment">// 返回-0</span></div><div class="line"><span class="number">1</span>/<span class="literal">Infinity</span>; <span class="comment">//返回0</span></div><div class="line"><span class="number">-1</span>/<span class="literal">Infinity</span>; <span class="comment">//返回-0</span></div></pre></td></tr></table></figure>
+<p>-0的出现让人困惑， 但是这是和js这门语言的应用场景相关的。</p>
+<p>比如动画帧的移动速度，就需要使用数字的符号来表示移动的方向，如果0没有负值，那么当速度为0时，丢失了方向信息。</p>
+</li>
+</ul>
+<h4 id="附：数字相关的函数"><a href="#附：数字相关的函数" class="headerlink" title="附：数字相关的函数"></a>附：数字相关的函数</h4><table>
+<thead>
+<tr>
+<th>所在对象</th>
+<th>使用</th>
+<th>解释</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Math</td>
+<td>Math.pow(x,y)</td>
+<td>x 的 y 次幂</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Math.abs(n1-n2)</td>
+<td>取计算结果的绝对值</td>
+<td></td>
+</tr>
+<tr>
+<td>Number</td>
+<td>Number.MAX_VALUE</td>
+<td>=1.7976931348623157e+308</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Number.POSITIVE_INFINITY</td>
+<td>= Infinity</td>
+<td>等于正无穷大</td>
+</tr>
+<tr>
+<td>Number.prototype</td>
+<td>(500000).toExponential()</td>
+<td>= “5e+5”</td>
+<td>数字转换为指数格式（字符串）</td>
+</tr>
+<tr>
+<td></td>
+<td>(4.320).toFixed(3)</td>
+<td>= “42.320”</td>
+<td>保留3位小数，无四舍五入</td>
+</tr>
+<tr>
+<td></td>
+<td>(4.320).toPrecision(4);</td>
+<td>= “4.320”</td>
+<td>小数+整数一共4位。截断的四舍五入，不够的用0补充</td>
+</tr>
+</tbody>
+</table>
+<h3 id="顺带笔记的"><a href="#顺带笔记的" class="headerlink" title="顺带笔记的"></a>顺带笔记的</h3><ul>
+<li><a href="http://www.w3school.com.cn/jsref/jsref_obj_array.asp" target="_blank" rel="external">W3C数组方法</a></li>
+<li>isFinite()<br>如果 number 是有限数字（或可转换为有限数字），那么返回 true。否则，如果 number 是 NaN（非数字），或者是正、负无穷大的数，则返回 false。</li>
+<li>arrayObject.concat(arrayX,arrayX,……,arrayX)<br>连接数组，返回副本。</li>
+<li>arrayObject.slice(start,end)<br>返回副本，浅复制。<br>从已有的数组中返回选定的元素。(坐标0开始)<br>参数为空默认全部选定，用于转化类数组。</li>
+<li>forEach()</li>
+<li>arrayObject.splice(index,howmany,item1,…..,itemX)<br>删除指定元素并用新元素取代</li>
+</ul>
+<h3 id="英文术语"><a href="#英文术语" class="headerlink" title="英文术语"></a>英文术语</h3><ul>
+<li>empty slot 空白单元</li>
+<li>sparse array 稀疏数组</li>
+<li>shallow copy 浅复制</li>
+<li>无穷数字<ul>
+<li>compiler error 编译错误( c语言中 )</li>
+<li>runtime exception 运行时错误( c语言中 )</li>
+<li>finite numeric representation 有限数字表示法</li>
+</ul>
+</li>
+</ul>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2017-02-19 12:02</span><i class="fa fa-comment-o"></i><a href="/readingNotes/book-of-you-dont-know-js-1.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/readingNotes/" title="readingNotes" class="tag">readingNotes </a><a href="/tags/你不知道的js/" title="你不知道的js" class="tag">你不知道的js </a></div></div></div></div><div class="share"><div class="evernote"> <a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></div><div class="weibo"> <a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></div><div class="twitter"> <a href="http://twitter.com/home?status=,http://blog.xiqian.me/readingNotes/book-of-you-dont-know-js-1.html,HappyBang's Blog,读书笔记：你不知道的js - 第一章,第二章,;" class="fa fa-twitter"></a></div></div><div class="pagination"><ul class="clearfix"><li class="pre pagbuttons"><a role="navigation" href="/jsBasic/Javascript_Object_Attributes_Of_JavaScript.html" title="JS对象属性的特征" class="btn">上一篇</a></li><li class="next pagbuttons"><a role="navigation" href="/jsBasic/Ways-of-loop-in-javascript.html" title="js中的几种遍历方式" class="btn">下一篇</a></li></ul></div><a id="comments"></a><div id="disqus_thread"></div><script>var disqus_shortname = 'happybangs';
+var disqus_identifier = 'readingNotes/book-of-you-dont-know-js-1.html';
+var disqus_title = '读书笔记：你不知道的js - 第一章,第二章';
+var disqus_url = 'http://blog.xiqian.me/readingNotes/book-of-you-dont-know-js-1.html';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//happybangs.disqus.com/count.js" async></script></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script></body></html>

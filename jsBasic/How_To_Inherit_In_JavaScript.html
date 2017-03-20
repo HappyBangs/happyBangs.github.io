@@ -1,0 +1,204 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="happyBangs"><meta name="baidu-site-verification" content="WOn1sDwJYq"><title>再看JS中的继承 | HappyBang's Blog</title><meta name="description" content="JS中的继承"><meta name="keywords" content="CSS,HTML,js,javascript"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="toc-wrapper"><div class="toc-btn"></div><div class="toc-menu"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ES5的继承"><span class="toc-text">ES5的继承</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原型原型链的概念"><span class="toc-text">原型原型链的概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#prototype、constructor、-proto-的关系"><span class="toc-text">prototype、constructor、__proto__的关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#instanceof和constructor的区别和联系"><span class="toc-text">instanceof和constructor的区别和联系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原型只共享引用类型吗？"><span class="toc-text">原型只共享引用类型吗？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实现对象继承的几种方式"><span class="toc-text">实现对象继承的几种方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#原型链继承"><span class="toc-text">原型链继承</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#借用构造函数继承"><span class="toc-text">借用构造函数继承</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#组合继承"><span class="toc-text">组合继承</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#原型式继承"><span class="toc-text">原型式继承</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#寄生式继承"><span class="toc-text">寄生式继承</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#寄生组合式继承"><span class="toc-text">寄生组合式继承</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从Babel编译ES6来看使用场景"><span class="toc-text">从Babel编译ES6来看使用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注"><span class="toc-text">注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></div></div><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.jpg" class="sidebar-img"><h3 title=""><a href="/">HappyBangs</a></h3><div class="description"><p>更无畏，更有想法。</p></div></div></div><ul class="social-links"><li><a href="/atom.xml"><i class="fa fa-rss"></i></a></li></ul><div class="footer"><span>Theme Anatole </span><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Powered by Hexo</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">首页</a></li><li><a href="/about">关于</a></li><li><a href="/archives">归档</a></li><li><a href="/links">友链</a></li><li><a href="/tags">标签</a></li></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h1><a>再看JS中的继承</a></h1></div><div class="post-content"><h2 id="ES5的继承"><a href="#ES5的继承" class="headerlink" title="ES5的继承"></a>ES5的继承</h2><p>使用原型链的基本模式实现继承的例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 父类</span></div><div class="line"><span class="keyword">var</span> superClass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.supName = <span class="string">'supName'</span>;</div><div class="line">&#125;;</div><div class="line">superClass.prototype.supPName = <span class="string">'supPName'</span>;</div><div class="line"><span class="comment">// 子类</span></div><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.subName = <span class="string">'subName'</span>;</div><div class="line">&#125;;</div><div class="line">subClass.prototype = <span class="keyword">new</span> superClass();<span class="comment">// constructor被覆盖，删除了</span></div><div class="line">subClass.prototype.subPName = <span class="string">'subPName'</span>;</div><div class="line"><span class="comment">// 实例</span></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> subClass();</div></pre></td></tr></table></figure>
+<p>画出原型图：</p>
+<p>虚线表示原型链(__proto__)，实线表示原型对象(prototype)。</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/f5210afc927f897fdcf55b2b2813959b.png" alt="原型大图.png"></p>
+<p>例图解释：</p>
+<p>由橙色的虚线知道：<strong>所有构造函数都包含指向Function.prototype的指针，因为构造函数都是函数（= new Function();）</strong>。</p>
+<p>由红色的虚线知道：<strong>所有原型对象(prototype)的都包含指向Object.prototype的指针，因为所有函数的默认原型（prototype）都是Object（= new Object();）的实例。</strong></p>
+<ul>
+<li><p>关于继承中的原型：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">instance.__proto__ === subClass.prototype;</div><div class="line">subClass.prototype.__proto__ === superClass.prototype;</div><div class="line">superClass.prototype.__proto__ === <span class="built_in">Object</span>.prototype;</div><div class="line"><span class="built_in">Object</span>.prototype.__proto__ === <span class="literal">null</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>关于构造函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">instance.constructor  === superClass; <span class="comment">// true</span></div><div class="line">instance.constructor  === subClass; <span class="comment">// false</span></div><div class="line">instance <span class="keyword">instanceof</span> subClass; <span class="comment">// true;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li>关于属性<br>除了原型链上的，<strong>还有父类的构造函数的</strong>。<br>父类的构造函数会向前提一级，变成其实例的直接属性。</li>
+<li>Function, Array，Number和Object的关系 ？</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.prototype.isPrototypeOf(<span class="built_in">Function</span>.prototype); <span class="comment">// true</span></div><div class="line"><span class="built_in">Function</span>.prototype.isPrototypeOf(<span class="built_in">Function</span>); <span class="comment">// true</span></div><div class="line"><span class="built_in">Object</span>.prototype.isPrototypeOf(<span class="built_in">Function</span>); <span class="comment">// true</span></div><div class="line"><span class="built_in">Object</span>.getPrototypeOf(<span class="built_in">Function</span>.prototype) === <span class="built_in">Object</span>.prototype; <span class="comment">// true</span></div><div class="line"><span class="built_in">Function</span>.prototype.isPrototypeOf(<span class="built_in">Array</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h3 id="原型原型链的概念"><a href="#原型原型链的概念" class="headerlink" title="原型原型链的概念"></a>原型原型链的概念</h3><blockquote>
+<p>原型 - prototype：（参考《Javascript高级程序设计》）</p>
+<p>定义 - 每个<strong>函数</strong>都有一个prototype（原型）属性，这个属性是一个指针，指向一个对象。这个对象<strong>默认</strong>包含一个constructor属性（也可能被覆盖掉），这个属性包含一个指向prototype属性所在函数的指针。</p>
+<p>好处 - 这个函数所创建的所有的<strong>实例(New)</strong>都共享这个对象所包含的属性和方法，不占用多份内存。</p>
+<p>原型链 - __proto__：（参考《Javascript高级程序设计》）</p>
+<p>如果让A的原型对象等于另一个类型B的实例，此时A的原型对象将包含指向B的原型对象的指针(__proto__)。相应的，B.prototype也包含着指向B构造函数的指针。将入B的原型对象又是C类型的的实例，上述关系依然成立。如此层层递进，就构成了实例与原型的链条。</p>
+</blockquote>
+<p>Q: 如何理解prototype指向的是一块内存地址? 即，原型对象的“重写”问题</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">Animal.prototype.name = <span class="string">'animal'</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Plants</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">Plants.prototype = &#123;<span class="comment">// 内存地址1</span></div><div class="line">  name: <span class="string">'plants'</span></div><div class="line">&#125;;</div><div class="line"><span class="keyword">var</span> a1 =  <span class="keyword">new</span> Animal(); <span class="comment">// a1.__proto__===Animal.prototype; a1.constructor===Animal</span></div><div class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Plants(); <span class="comment">// p1.__proto__===Plants.prototype;p1.constructor===Object</span></div><div class="line">Plants.prototype = &#123; <span class="comment">// 内存地址2。在这个位置修改Plants的原型，相当于指向了一块新的地址。看看会发生生么</span></div><div class="line">  name: <span class="string">'plants new'</span></div><div class="line">&#125;;</div><div class="line"><span class="built_in">console</span>.log(p1); <span class="comment">// attention!!: p1.__proto__!==Plants.prototype;p1.constructor===Object；</span></div><div class="line"><span class="comment">// 这是因为p1.__proto__仍然指向的定义时的内存地址1; 同理constructor也是跟随定义时的内存地址中的constructor。</span></div><div class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> Plants();<span class="comment">// p2.__proto__===Plants.prototype;p2.constructor===Object</span></div></pre></td></tr></table></figure>
+<p>由此可以得出要注意的一点：</p>
+<p>在有实例创建之后，就不要修改prototype指向的地址了。因为实例的仍然存储的是“快照”，和你重新定义的无法联系起来。</p>
+<h3 id="prototype、constructor、-proto-的关系"><a href="#prototype、constructor、-proto-的关系" class="headerlink" title="prototype、constructor、__proto__的关系"></a>prototype、constructor、__proto__的关系</h3><ul>
+<li><p>函数默认有prototype属性，它是一块指针，指向一个内存地址。默认指向的内存地址，包含一个constructor的属性。所以constructor是prototype的一个属性。constructor指向这个函数。</p>
+</li>
+<li><p>当这个函数作为构造函数，创建了实例。这个实例就拥有一个指向函数的原型对象(prototype)的内部指针(__proto__)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Function</span>.__proto__ === <span class="built_in">Function</span>.prototype; <span class="comment">// Function = new Function();</span></div><div class="line"><span class="built_in">Function</span>.prototype === <span class="built_in">Function</span>.__proto__;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="instanceof和constructor的区别和联系"><a href="#instanceof和constructor的区别和联系" class="headerlink" title="instanceof和constructor的区别和联系"></a>instanceof和constructor的区别和联系</h3><p>问题引入：为什么有的时候constructor不能用的时候，instanceof还能用？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">Animal.prototype = &#123;&#125;;</div><div class="line"><span class="keyword">var</span> a1 = <span class="keyword">new</span> Animal();</div><div class="line">a1.constructor === Animal; <span class="comment">// false; 因为Animal.prototype.constructor未定义</span></div><div class="line">a1 <span class="keyword">instanceof</span> Animal; <span class="comment">// true</span></div><div class="line">a1 <span class="keyword">instanceof</span> <span class="built_in">Object</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<ul>
+<li><p>实现原理不同</p>
+<ul>
+<li><p>instance.constructor</p>
+<p>取Animal.prototype.constructor的值。默认Animal.prototype.constructor === Animal。</p>
+<p>但是，当你修改Animal.prototype指向的地址(例子中是这种情况)，或者直接修改construcor的值时，它就会失效。</p>
+</li>
+<li><p>instance instanceof Animal</p>
+<p>根据a1.__proto__是否等于 Animal.prototype。</p>
+</li>
+</ul>
+</li>
+<li><p>作用不同</p>
+<ul>
+<li>constructor只能得出直接的类型（一层）</li>
+<li>instanceof能检测原型链上<strong>所有</strong>的类型，如Object（多层）</li>
+</ul>
+</li>
+<li><p>可靠性不同</p>
+<ul>
+<li>constructor只有默认的prototype才会自动创建，而用户很有可能为了实现继承而覆盖prototype所包含的地址。所以constructor很可能没定义。</li>
+<li>instanceof不会被覆盖，更可靠</li>
+</ul>
+</li>
+</ul>
+<p><code>instanceof</code>的作用等同于<code>Object.prototype.isPrototypeOf()</code>，都是查找的原型链，只是两者的调用方式不同。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Animal.prototype.isPrototypeOf(a1);  <span class="comment">// true;</span></div><div class="line"><span class="built_in">Object</span>.prototype.isPrototypeOf(a1);  <span class="comment">// true;</span></div></pre></td></tr></table></figure>
+<h3 id="原型只共享引用类型吗？"><a href="#原型只共享引用类型吗？" class="headerlink" title="原型只共享引用类型吗？"></a>原型只共享引用类型吗？</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> supClass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">supClass.prototype.name = <span class="string">'spName'</span>;</div><div class="line">supClass.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.name;&#125;;</div><div class="line"><span class="keyword">var</span> instance1 = <span class="keyword">new</span> supClass();</div><div class="line"><span class="keyword">var</span> instance2 = <span class="keyword">new</span> supClass();</div><div class="line">instance1.name === instance2.name; <span class="comment">// true</span></div><div class="line">instance1.name = <span class="string">'instanceName'</span>;</div><div class="line">instance2.name === <span class="string">'instanceName'</span>; <span class="comment">// false why?原型的属性不是共享的吗</span></div></pre></td></tr></table></figure>
+<p>由上面这个例子并不能得出他只共享引用类型，因为 对<code>instance1.name</code>重新赋值，代表了instance1的属性上新增了name属性。</p>
+<p><strong>原型的共享只体现在读取属性上。</strong></p>
+<h3 id="实现对象继承的几种方式"><a href="#实现对象继承的几种方式" class="headerlink" title="实现对象继承的几种方式"></a>实现对象继承的几种方式</h3><blockquote>
+<p>许多面向对象(OO)语言都支持两种继承方式：接口继承和实现继承</p>
+<p>其中接口继承只继承方法签名，而实现继承则继承实际的方法。</p>
+<p>由于JS中函数没有签名，因此在ECMAScript中无法实现接口继承，只支持实现继承。</p>
+<p>—— 《JavaScript高级程序设计》</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>继承方式名称</th>
+<th>说明</th>
+<th>缺点</th>
+<th>优点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原型链继承</td>
+<td>很少单独使用</td>
+<td>1. 不该共享的属性也共享了;  2. 无法在不影响所有对象实例的情况下，向超类型的构造函数传递参数；（subClass.prototype = new superClass(); 根本不在subClass构造函数中，所以拿不到参数）</td>
+<td>1. 有共享的概念；2. 能使用instanceof和isPrototypeOf（constructor只能找到“最终的”父类）</td>
+</tr>
+<tr>
+<td>借用构造函数继承</td>
+<td>在子类构造函数中调用父类的构造函数(apply or call)。</td>
+<td>1. 方法都在构造函数中定义，没有共享的概念；2. 没有原型继承，不知道父类是什么。</td>
+<td>1. 可以向超类型传递参数；</td>
+</tr>
+<tr>
+<td>组合继承/伪经典继承</td>
+<td>借用构造函数 + 原型链 —— 把属性分为原型属性(共享)和实例属性（不共享）。</td>
+<td>超类型的构造函数会执行两次，一次是创建子类原型时，一次在子类构造函数内部。因此，其中this上的属性也会同时挂载在实例属性和原型属性上。（只不过因为优先级，只识别实例属性上的）</td>
+<td>1. 有原型；2. 该共享共享，不改共享的不共享</td>
+</tr>
+<tr>
+<td>原型式继承</td>
+<td>不需要创建构造函数、不需要显式调用new来创建实例，只有原型属性的继承。<code>Object.create()</code></td>
+<td>始终共享相同的值</td>
+<td>另辟蹊径，步骤简单</td>
+</tr>
+<tr>
+<td>寄生式继承</td>
+<td>原型式继承 + 二次增强，类似寄生构造函数（工厂模式 + 二次增强）</td>
+<td>不认同书上说的“不能做到函数复用”的缺点，因为我用寄生式继承不一定是为它增加一个引用类型的可共享属性，还有可能是不可共享的。</td>
+<td>可以对原型式继承进行二次增强。</td>
+</tr>
+<tr>
+<td>寄生组合式继承</td>
+<td>引用类型最理想的继承范式。去掉<code>subClass.prototype = new supClass()</code>，改为 <code>subClass.prototype = commonObject;</code>,commonObject.__proto__ = supClass.prototype。</td>
+<td>保持了组合继承的所有优点</td>
+<td>高效：之调用了一次supClass改造函数，避免了组合继承的缺点。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="原型链继承"><a href="#原型链继承" class="headerlink" title="原型链继承"></a>原型链继承</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 父类</span></div><div class="line"><span class="keyword">var</span> superClass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.supName = <span class="string">'supName'</span>;</div><div class="line">&#125;;</div><div class="line">superClass.prototype.supPName = <span class="string">'supPName'</span>;</div><div class="line"><span class="comment">// 子类</span></div><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.subName = <span class="string">'subName'</span>;</div><div class="line">&#125;;</div><div class="line">subClass.prototype = <span class="keyword">new</span> superClass();<span class="comment">// constructor被覆盖，删除了</span></div><div class="line">subClass.prototype.subPName = <span class="string">'subPName'</span>;</div><div class="line"><span class="comment">// 实例</span></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> subClass();</div></pre></td></tr></table></figure>
+<p>缺点：</p>
+<ul>
+<li><p>包含引用类型值的原型不应该被所有实例共享。</p>
+<p><code>superClass中的supName</code>就会被所有实例共享，因为它存在于<code>instance</code>的原型属性中。</p>
+</li>
+<li><p>无法向超类型的构造函数传值。</p>
+<p>传值只能传到subClass的构造函数中，而subClass函数和superClass没有直接关系，无法传参。</p>
+<p>​</p>
+</li>
+</ul>
+<h4 id="借用构造函数继承"><a href="#借用构造函数继承" class="headerlink" title="借用构造函数继承"></a>借用构造函数继承</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 父类</span></div><div class="line"><span class="keyword">var</span> superClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.supName = name;</div><div class="line">&#125;;</div><div class="line"><span class="comment">// 子类</span></div><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  superClass.call(<span class="keyword">this</span>, name);</div><div class="line">  <span class="keyword">this</span>.subName = <span class="string">'sub'</span> + name;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 实例</span></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> subClass(<span class="string">'Instance'</span>); <span class="comment">// &#123;supName: "Instance", subName: "subInstance"&#125;</span></div></pre></td></tr></table></figure>
+<p>缺点很明显，没有使用到原型：属性无法共享、实例找不到父类是谁。</p>
+<h4 id="组合继承"><a href="#组合继承" class="headerlink" title="组合继承"></a>组合继承</h4><p>使用原型链实现对原型属性的继承，通过借用构造函数来实现对实例属性的继承</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 父类</span></div><div class="line"><span class="keyword">var</span> superClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.supName = name; </div><div class="line">&#125;;</div><div class="line">superClass.prototype.supPName = <span class="string">'supPName'</span>;</div><div class="line"><span class="comment">// 子类</span></div><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  superClass.call(<span class="keyword">this</span>, name); <span class="comment">// superClass()执行第一遍</span></div><div class="line">  <span class="keyword">this</span>.subName = <span class="string">'sub'</span> + name;</div><div class="line">&#125;</div><div class="line">subClass.prototype = <span class="keyword">new</span> superClass();<span class="comment">// superClass()执行第二遍</span></div><div class="line">subClass.prototype.subPName = <span class="string">'subPName'</span>;</div><div class="line"><span class="comment">// 实例</span></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> subClass(<span class="string">'Instance'</span>);</div></pre></td></tr></table></figure>
+<p>控制台的打印结果：</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/eb0833995a9f9df9d4ce6fe5ad6925d0.png" alt="组合继承图.png"></p>
+<p>从控制台打印的额结果看到，<code>subPName</code>被定义了两遍，它既在subClass的实例属性里，也在subClass的原型属性里。</p>
+<p>这个是JavaScript中最常用的继承模式，但是缺点就是原型链和实例属性会有重合的部分（但由于原型链的搜索原则，读取属性的时候优先读取实例的，所以不影响使用）。</p>
+<p>结合了原型链和借用构造函数两种方式的优点：</p>
+<ol>
+<li>能给超类型构造函数传参。</li>
+<li>能使用<code>instanceof</code>和<code>isPrototypeOf()</code>识别基于组合继承创建的对象。</li>
+<li>属性可以共享，也可以不共享。</li>
+</ol>
+<h4 id="原型式继承"><a href="#原型式继承" class="headerlink" title="原型式继承"></a>原型式继承</h4><p>道格拉斯 · 克罗克福特 介绍的一种实现继承的方法，<strong>这种方法并没有使用严格意义的构造函数</strong>。</p>
+<p>原理：不同的实例虽然构造函数不一样（各种副本），但是他们的构造函数都拥有一个共同的原型对象（指向的地址相同），所以实例之间始终共享原型对象的属性。</p>
+<p>特点： 它对不同对象的继承，都只依赖于一个通用的工厂函数，如<code>Object.create()</code>。</p>
+<p>用处：步骤最少最简单的继承方式。</p>
+<p>当年作者给出的通用工厂函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span>(<span class="params">pt</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> superClass = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">  superClass.prototype = pt;</div><div class="line">  <span class="keyword">return</span> superClass;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> shareObj = &#123;</div><div class="line">  <span class="attr">name</span>: <span class="string">'cc'</span>,</div><div class="line">  <span class="attr">friends</span>: [<span class="string">'Andy'</span>, <span class="string">'Sam'</span>]</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> ming = <span class="built_in">Object</span>.create(shareObj); <span class="comment">// 或者使用自定义的方法，var ming = object(shareObj); </span></div><div class="line"><span class="keyword">var</span> hong = <span class="built_in">Object</span>.create(shareObj);</div><div class="line">ming.name === hong.name; <span class="comment">// true</span></div><div class="line">ming.name = <span class="string">'ming'</span>;</div><div class="line">hong.name; <span class="comment">// 'cc', 因为ming.name的修改并没有修改原型上的name，只是为ming自己新增了属性。</span></div></pre></td></tr></table></figure>
+<p><code>Object.create()</code>，其实有两个参数，第一个是返回值的prototype，第二个参数是实例属性们。但需要定义自己的描述符：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> bai = <span class="built_in">Object</span>.create(shareObj, &#123;</div><div class="line">  <span class="attr">age</span>: &#123;</div><div class="line">    <span class="attr">value</span>: <span class="number">1</span>,</div><div class="line">    <span class="attr">writtable</span>: <span class="literal">false</span></div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="寄生式继承"><a href="#寄生式继承" class="headerlink" title="寄生式继承"></a>寄生式继承</h4><p>寄生式（parastic）继承很容易让人联想到寄生构造函数，他们也确实都有个共同点是用于==二次增强==。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subClass, supClass</span>) </span>&#123;</div><div class="line">  <span class="comment">// superPrototype.__proto__ === supClass.prototype; // true</span></div><div class="line">  <span class="keyword">var</span> superPrototype = <span class="built_in">Object</span>.create(supClass.prototype);<span class="comment">// 创建对象，其原型对象 = 父类的原型对象</span></div><div class="line">  superPrototype.constructor = subClass; <span class="comment">// 二次增强，不影响实例使用constructor找妈妈。</span></div><div class="line">  subClass.prototype = superPrototype; <span class="comment">// 形成原型链</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>很经典的一个函数，用于下面的寄生组合式继承中。</p>
+<h4 id="寄生组合式继承"><a href="#寄生组合式继承" class="headerlink" title="寄生组合式继承"></a>寄生组合式继承</h4><p>弥补组合式继承超类构造函数的会调用二次的缺点。</p>
+<p>让我们先回忆一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 父类</span></div><div class="line"><span class="keyword">var</span> superClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  <span class="keyword">this</span>.supName = name; </div><div class="line">&#125;;</div><div class="line">superClass.prototype.supPName = <span class="string">'supPName'</span>;</div><div class="line"><span class="comment">// 子类</span></div><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">  superClass.call(<span class="keyword">this</span>, name); <span class="comment">// superClass()执行第一遍</span></div><div class="line">  <span class="keyword">this</span>.subName = <span class="string">'sub'</span> + name;</div><div class="line">&#125;</div><div class="line">subClass.prototype = <span class="keyword">new</span> superClass();<span class="comment">// superClass()执行第二遍</span></div><div class="line">subClass.prototype.subPName = <span class="string">'subPName'</span>;</div><div class="line"><span class="comment">// 实例</span></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> subClass(<span class="string">'Instance'</span>);</div></pre></td></tr></table></figure>
+<p>第11行可以使用寄生式继承中的<code>inheritPrototype</code>来改造一下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">inheritPrototype(subClass, superClass);</div></pre></td></tr></table></figure>
+<p>这样superClass就不会多次调用了。</p>
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a7ca9aad232659e4cd24cf980632f2a9.png" alt="寄生组合式继承图片.png"></p>
+<h3 id="从Babel编译ES6来看使用场景"><a href="#从Babel编译ES6来看使用场景" class="headerlink" title="从Babel编译ES6来看使用场景"></a>从Babel编译ES6来看使用场景</h3><p>Babel中将Class.extends的继承方式翻译成ES5就使用了这种继承方式。利用了这个函数：</p>
+<p>ES6:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SupClass</span> </span>&#123;</div><div class="line">  <span class="keyword">constructor</span>() &#123;</div><div class="line">    <span class="keyword">this</span>.name = <span class="string">'supName'</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">subClass</span> <span class="keyword">extends</span> <span class="title">SupClass</span> </span>&#123;</div><div class="line">  <span class="keyword">constructor</span>() &#123;</div><div class="line">    <span class="keyword">super</span>(); <span class="comment">// 一定有这行，否则不能使用this</span></div><div class="line">    <span class="keyword">this</span>.name = <span class="string">'subname'</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>寄生组合式继承关键的函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">_inherits</span>(<span class="params">subClass, superClass</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> superClass !== <span class="string">"function"</span> &amp;&amp; superClass !== <span class="literal">null</span>) &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">"Super expression must either be null or a function, not "</span> + <span class="keyword">typeof</span> superClass);</div><div class="line">  &#125;</div><div class="line">  subClass.prototype = <span class="built_in">Object</span>.create(superClass &amp;&amp; superClass.prototype, &#123;</div><div class="line">    <span class="attr">constructor</span>: &#123;</div><div class="line">      <span class="attr">value</span>: subClass,</div><div class="line">      <span class="attr">enumerable</span>: <span class="literal">false</span>,</div><div class="line">      <span class="attr">writable</span>: <span class="literal">true</span>,</div><div class="line">      <span class="attr">configurable</span>: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">  <span class="keyword">if</span> (superClass) </div><div class="line">    <span class="built_in">Object</span>.setPrototypeOf ? <span class="built_in">Object</span>.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; <span class="comment">// 子类的this指向于superClass，以完成构造函数继承。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> subClass = <span class="function"><span class="keyword">function</span> (<span class="params">_SupClass</span>) </span>&#123;</div><div class="line">  _inherits(subClass, _SupClass); <span class="comment">// 把subClass.prototype放到闭包中，不用每次新建实例都执行。</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">subClass</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    _classCallCheck(<span class="keyword">this</span>, subClass);</div><div class="line"></div><div class="line">    <span class="keyword">var</span> _this = _possibleConstructorReturn(<span class="keyword">this</span>, (subClass.__proto__ || <span class="built_in">Object</span>.getPrototypeOf(subClass)).call(<span class="keyword">this</span>)); <span class="comment">// 注意有.call，是有执行的。_this返回的是执行过superClass构造函数之后的this</span></div><div class="line"></div><div class="line">    _this.name = <span class="string">'subname'</span>;<span class="comment">// name属性放在了subClass.__proto__上，就是subClass</span></div><div class="line">    <span class="keyword">return</span> _this;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> subClass;</div><div class="line">&#125;(SupClass); <span class="comment">// 立即执行函数</span></div></pre></td></tr></table></figure>
+<h2 id="注"><a href="#注" class="headerlink" title="注"></a>注</h2><blockquote>
+<p>ECMAScript是由ECMA-262标准化的脚本语言的名称。JavaScript和JScript与ECMAScript相容，但包含超出ECMAScript的功能。</p>
+<p>—— WIKI百科</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>《JavaScript高级程序设计》</li>
+</ul>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-moon-o"></i><span class="date">2017-03-20 19:03</span><i class="fa fa-comment-o"></i><a href="/jsBasic/How_To_Inherit_In_JavaScript.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/jsBasic/" title="jsBasic" class="tag">jsBasic </a><a href="/tags/原型/" title="原型" class="tag">原型 </a><a href="/tags/webpack/" title="webpack" class="tag">webpack </a><a href="/tags/原型链/" title="原型链" class="tag">原型链 </a><a href="/tags/继承/" title="继承" class="tag">继承 </a><a href="/tags/inherit/" title="inherit" class="tag">inherit </a></div></div></div></div><div class="share"><div class="evernote"> <a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></div><div class="weibo"> <a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></div><div class="twitter"> <a href="http://twitter.com/home?status=,http://blog.xiqian.me/jsBasic/How_To_Inherit_In_JavaScript.html,HappyBang's Blog,再看JS中的继承,;" class="fa fa-twitter"></a></div></div><div class="pagination"><ul class="clearfix"><li class="next pagbuttons"><a role="navigation" href="/jsBasic/How_To_Create_Object_In_JavaScript.html" title="JS创建对象的几种方式" class="btn">下一篇</a></li></ul></div><a id="comments"></a><div id="disqus_thread"></div><script>var disqus_shortname = 'happybangs';
+var disqus_identifier = 'jsBasic/How_To_Inherit_In_JavaScript.html';
+var disqus_title = '再看JS中的继承';
+var disqus_url = 'http://blog.xiqian.me/jsBasic/How_To_Inherit_In_JavaScript.html';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//happybangs.disqus.com/count.js" async></script></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script></body></html>

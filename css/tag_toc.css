@@ -1,0 +1,71 @@
+.toc-wrapper {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 5;
+    background-color: #fff;
+    cursor: pointer;
+}
+.toc-wrapper ol {
+  list-style-type: decimal;
+  font-size: 12px;
+}
+.toc-wrapper ol ol {
+  list-style-type: none; 
+  padding-left: 1em;
+}
+.toc-btn {
+    width: 45px;
+    height: 45px;
+    border: 1px dashed #999;
+    border-radius: 40px;
+    background-color: pink;
+    background: url(../images/menu.png) center center no-repeat;
+    background-size: 35px
+}
+.toc-wrapper:hover .toc-btn{
+  display: none;
+}
+.toc-wrapper:hover .toc-menu {
+  display: inline-block;
+}
+.toc-wrapper.active .toc-btn{
+  display: none;
+}
+.toc-wrapper.active .toc-menu {
+  display: inline-block;
+}
+.toc-wrapper .toc-menu {
+  display: none;
+  max-height: 70%;
+  overflow: auto;
+  border: 1px solid #f0f0f0;
+  min-width: 180px;
+  min-height: 200px;
+}
+
+.toc-menu>ol {
+    margin-top: 0;
+    margin-bottom: 0;
+    border: 0;
+}
+
+.tag-page {
+    padding: 20px 10px;
+}
+.tag-page  {
+    max-width: 40em;
+    margin: 2em auto;
+    margin-top: 0em;
+}
+.tag-page  a {
+    font-weight: 200;
+    margin-right: 1em;
+    line-height: 65px;
+    white-space: nowrap;
+}
+.tag-page  a:hover {
+    font-style: italic;
+    border-bottom: 1px solid grey;
+    text-decoration: none;
+}

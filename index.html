@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="happyBangs"><meta name="baidu-site-verification" content="WOn1sDwJYq"><title>HappyBang's Blog</title><meta name="description" content="HappyBang's Blog. 前端技术博客，定期包括js、css等基础知识、以及canvas、react等中级知识"><meta name="keywords" content="CSS,HTML,js,javascript"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.jpg" class="sidebar-img"><h3 title=""><a href="/">HappyBangs</a></h3><div class="description"><p>更无畏，更有想法。</p></div></div></div><ul class="social-links"><li><a href="/atom.xml"><i class="fa fa-rss"></i></a></li></ul><div class="footer"><span>Theme Anatole </span><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Powered by Hexo</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/" class="current">首页</a></li><li><a href="/about">关于</a></li><li><a href="/archives">归档</a></li><li><a href="/links">友链</a></li><li><a href="/tags">标签</a></li></div></div><div class="autopagerize_page_element"><div class="content"><div class="post animated fadeInDown"><div class="post-title"><h1><a href="/jsBasic/How_To_Inherit_In_JavaScript.html">再看JS中的继承</a></h1></div><div class="post-content"><p>ES5的继承使用原型链的基本模式实现继承的例子：
+12345678910111213// 父类var superClass = function() &amp;#123;  this.supName = 'supName';&amp;#125;;superClass.prototype.supPName = 'supPName'...</p></div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-moon-o"></i><span class="date">2017-03-20 19:03</span><i class="fa fa-comment-o"></i><a href="/jsBasic/How_To_Inherit_In_JavaScript.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/jsBasic/" title="jsBasic" class="tag">jsBasic </a><a href="/tags/原型/" title="原型" class="tag">原型 </a><a href="/tags/webpack/" title="webpack" class="tag">webpack </a><a href="/tags/原型链/" title="原型链" class="tag">原型链 </a><a href="/tags/继承/" title="继承" class="tag">继承 </a><a href="/tags/inherit/" title="inherit" class="tag">inherit </a></div></div></div></div><div class="post animated fadeInDown"><div class="post-title"><h1><a href="/jsBasic/How_To_Create_Object_In_JavaScript.html">JS创建对象的几种方式</a></h1></div><div class="post-content"><p>对象创建方式前三种比较常用，后三种是某些特殊情况下的变体。
+
+
+
+创建方式名称
+说明
+特点
+缺点
+优点
+
+
+
+
+工厂模式
+简单地封装到一个函数里
+显式地创建了对象
+对象和构造函数之间没有什么关系。因为构造函数是Object，instaceof和constructor都不能用
+
+
+
+构造函数模式
+new Class...</p></div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-moon-o"></i><span class="date">2017-03-20 19:03</span><i class="fa fa-comment-o"></i><a href="/jsBasic/How_To_Create_Object_In_JavaScript.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/jsBasic/" title="jsBasic" class="tag">jsBasic </a><a href="/tags/constructor，prototype/" title="constructor，prototype" class="tag">constructor，prototype </a><a href="/tags/原型/" title="原型" class="tag">原型 </a></div></div></div></div><div class="post animated fadeInDown"><div class="post-title"><h1><a href="/jsBasic/Javascript_Object_Attributes_Of_JavaScript.html">JS对象属性的特征</a></h1></div><div class="post-content"><p>
+对象是无序属性的集合，其属性可以包含基本值、对象或者函数每个属性(property)有自己的特征(attribute)，比如是否可读、是否可枚举等等。这些特征只有内部才用（我理解的“内部”是只有编译引擎才会去使用）。同[[proto]]一样，这些attributes也放在方括号里。
+
+注意在代码中它们都是首字母...</p></div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-moon-o"></i><span class="date">2017-03-20 19:03</span><i class="fa fa-comment-o"></i><a href="/jsBasic/Javascript_Object_Attributes_Of_JavaScript.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/jsBasic/" title="jsBasic" class="tag">jsBasic </a><a href="/tags/Configuable/" title="Configuable" class="tag">Configuable </a><a href="/tags/Enumerable/" title="Enumerable" class="tag">Enumerable </a><a href="/tags/Writable/" title="Writable" class="tag">Writable </a><a href="/tags/Get/" title="Get" class="tag">Get </a><a href="/tags/Set/" title="Set" class="tag">Set </a></div></div></div></div><div class="post animated fadeInDown"><div class="post-title"><h1><a href="/readingNotes/book-of-you-dont-know-js-1.html">读书笔记：你不知道的js - 第一章,第二章</a></h1></div><div class="post-content"><p>第一章 类型1. undefined 和 undeclared
+undefined（未定义） 已经在作用域中声明了，但是没定义/赋值。
+
+undeclared（未声明） 还没有在作用域中声明过的变量。
+
+关系
+1type of undeclared === 'undefined';// true
+注意： 正常使用...</p></div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2017-02-19 12:02</span><i class="fa fa-comment-o"></i><a href="/readingNotes/book-of-you-dont-know-js-1.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/readingNotes/" title="readingNotes" class="tag">readingNotes </a><a href="/tags/你不知道的js/" title="你不知道的js" class="tag">你不知道的js </a></div></div></div></div><div class="post animated fadeInDown"><div class="post-title"><h1><a href="/jsBasic/Ways-of-loop-in-javascript.html">js中的几种遍历方式</a></h1></div><div class="post-content"><p>几种循环方式对比
+
+
+名称
+简介
+入参
+原生
+适用对象
+this
+跳出循环块
+直接进入下一次循环
+特点
+
+
+
+
+for(var i=0;i&amp;lt;v.length;i++) {}
+basic
+
+yes
+array，伪数组(domList)
+window
+break
+continue
+
+
+
+for(key in l...</p></div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2017-02-12 16:02</span><i class="fa fa-comment-o"></i><a href="/jsBasic/Ways-of-loop-in-javascript.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/jsBasic/" title="jsBasic" class="tag">jsBasic </a><a href="/tags/js/" title="js" class="tag">js </a><a href="/tags/for/" title="for" class="tag">for </a><a href="/tags/for-in/" title="for in" class="tag">for in </a><a href="/tags/for-of/" title="for of" class="tag">for of </a><a href="/tags/foreach/" title="foreach" class="tag">foreach </a><a href="/tags/map/" title="map" class="tag">map </a></div></div></div></div><div class="post animated fadeInDown"><div class="post-title"><h1><a href="/css/Intro-of-flex-principle.html">Flex布局原理介绍</a></h1></div><div class="post-content"><p>引言CSS3中的 Flexible Box，或者叫flexbox，是用于排列元素的一种布局模式。
+顾名思义，弹性布局中的元素是有伸展和收缩自身的能力的。 相比于原来的布局方式，如float、position，根据盒子模型，就可以计算出元素的展示尺寸（长宽非百分比），除非溢出，否则不依赖于父容器的大小。
+而弹性布局...</p></div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-moon-o"></i><span class="date">2017-01-03 05:01</span><i class="fa fa-comment-o"></i><a href="/css/Intro-of-flex-principle.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/css/" title="样式" class="tag">样式 </a><a href="/tags/css-basic/" title="css_basic" class="tag">css_basic </a><a href="/tags/flex/" title="flex" class="tag">flex </a></div></div></div></div><div class="post animated fadeInDown"><div class="post-title"><h1><a href="/css/Intro-of-BEM.html">BEM</a></h1></div><div class="post-content"><p>众所周知，统一的命名规范可以显著的提高开发速度，然而现在大多数项目中的css的代码，都不会约定命名规范来开发，这导致随着时间的增长，css代码越来越不可维护。  
+BEM是Yandex团队提出的，通过一种严格方式来将 CSS Class划分成独立构成要素的一种命名方法。
+
+BEM is a highly usef...</p></div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2016-08-30 12:08</span><i class="fa fa-comment-o"></i><a href="/css/Intro-of-BEM.html#comments">评论</a><i class="fa fa-tag"></i><a href="/categories/css/" title="样式" class="tag">样式 </a><a href="/tags/css规范/" title="css规范" class="tag">css规范 </a><a href="/tags/css-basic/" title="css_basic" class="tag">css_basic </a></div></div></div></div><div class="pagination"><ul class="clearfix"></ul></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script>(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();</script></body></html>
